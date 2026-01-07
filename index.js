@@ -8,7 +8,6 @@ const { player_box_options,
     play_time_options, 
     track_title_options, 
     track_artist_options } = json5.parse(readFileSync('./ui/player_box.json5', 'utf-8'));
-// asdlasjdblasdblasd
 
 
 // TODO : fix process title
