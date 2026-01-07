@@ -1,0 +1,79 @@
+{
+    "player_box_options": {
+        "top": "100%-3",
+        "left": 2,
+        "width": "100%-3",
+        "height": 3,
+        "border": {
+            "type": "line"
+        },
+        "style": {
+            "fg": "white",
+            "border": {
+                fg: "#ffffff",
+            },
+        }
+    },
+
+    "button_play_options": {
+        "top": 0,
+        // TODO : try to centrate with align
+        "left": "50%-4",
+        "width": 5,
+        "height": 1,
+        // generate content in script
+        //"content": _button_play_content(),
+        "tags": true,
+        "align": "center",
+        "style": {
+            "hover": {
+                bg: ''
+            }
+        }
+    },
+
+    "play_time_options": {
+        "top": 0,
+        "left": "100%-14",
+        "width": 12,
+        "height": 1,
+        "content": "00:00|00:00",
+        "align": "center",
+        "style": {
+            "fg": "white",
+            "hover": {
+                "bg": "#600000"
+            }
+        }
+    },
+
+    "track_title_options": {
+        "top": 0,
+        "left": 1,
+        "width": 13,
+        "height": 1,
+        "content": "♫ Track title",
+        //"align": "center",
+        "style": {
+            "fg": "white",
+            "hover": {
+                "underline": true
+            }
+        }
+    },
+
+    "track_artist_options": {
+        "top": 0,
+        "left": 15,
+        "width": 11,
+        "height": 1,
+        "content": "- artist",
+        //"align": "center",
+        "style": {
+            "fg": "#aaaaaa",
+            "hover": {
+                "fg": "white"
+            }
+        }
+    }
+}
