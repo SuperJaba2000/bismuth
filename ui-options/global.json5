@@ -1,0 +1,18 @@
+{
+    "message_box": {
+        "top": "50%-3",
+        "left": "50%-10",
+        "width": 20,
+        "height": 3,
+        "align": "center",
+        "border": {
+            "type": "line"
+        },
+        "style": {
+            "fg": "white",
+            "border": {
+                "fg": "magenta",
+            },
+        }
+    }
+}

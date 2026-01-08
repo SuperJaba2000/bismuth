@@ -1,0 +1,31 @@
+{
+    "tab_files_separator": {
+        "type": "line",
+        "orientation" : "vertical",
+        "top": 1,
+        "left": 30,
+        "width": 1,
+        "height": "100%-5",
+        "style": {
+            "fg": "gray",
+        }
+    },
+
+    "tab_files_filemanager": {
+        "top": 1,
+        "left": 31,
+        "width": 80,
+        "mouse": true,
+        "height": "100%-5",
+        "style": {
+            "item": {
+                "fg": "white",
+                
+            },
+            "selected": {
+                "bg": "#bcbcbcff",
+                "fg": "black"
+            }
+        }
+    }
+}

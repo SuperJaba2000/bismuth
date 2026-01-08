@@ -1,5 +1,5 @@
 import blessed from 'reblessed';
-import { init_ui } from './ui.js';
+import { init_ui, show_message, ui_options } from './ui.js';
 
 const screen = blessed.screen({
     smartCSR: true,
@@ -13,12 +13,14 @@ function init() {
 
     init_ui(screen);
 
-    screen.key(['escape', 'q', 'C-c'], () => {
+    screen.key(['q', 'C-c'], () => {
         return process.exit(0);
     });
 
     screen.key(['r'], () => {
         init_ui(screen);
+
+        show_message(screen, 'Player reloaded!', 1);
     });
 }
 
