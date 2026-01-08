@@ -1,24 +1,25 @@
 {
-    "player_box_options": {
+    "player_box": {
         "top": "100%-3",
         "left": 2,
         "width": "100%-3",
         "height": 3,
+        "content": " ♫ ",
         "border": {
             "type": "line"
         },
         "style": {
             "fg": "white",
-            "border": {
-                fg: "#ffffff",
-            },
+            "border": {d
+                fg: "#ffffff",dfdfd
+            },d
         }
     },
 
-    "button_play_options": {
+    "button_play": {
         "top": 0,
         // TODO : try to centrate with align
-        "left": "50%-4",
+        "left": "50%-3",
         "width": 5,
         "height": 1,
         // generate content in script
@@ -27,12 +28,48 @@
         "align": "center",
         "style": {
             "hover": {
-                bg: ''
+                bg: "gray"
             }
         }
     },
 
-    "play_time_options": {
+    "button_prev": {
+        "top": 0,
+        // TODO : try to centrate with align
+        "left": "50%-7",
+        //"left": "40%",
+        "width": 4,
+        "height": 1,
+        // generate content in script
+        //"content": _button_prev_content(),
+        "tags": true,
+        //"align": "center",
+        "style": {
+            "hover": {
+                bg: "gray"
+            }
+        }
+    },
+
+    "button_next": {
+        "top": 0,
+        // TODO : try to centrate with align
+        "left": "50%+2",
+        //"left": "60%",
+        "width": 4,
+        "height": 1,
+        // generate content in script
+        //"content": _button_prev_content(),
+        "tags": true,
+        "align": "center",
+        "style": {
+            "hover": {
+                bg: "gray"
+            }
+        }
+    },
+
+    "play_time": {
         "top": 0,
         "left": "100%-14",
         "width": 12,
@@ -47,12 +84,12 @@
         }
     },
 
-    "track_title_options": {
+    "track_title": {
         "top": 0,
-        "left": 1,
-        "width": 13,
+        "left": 3,
+        "width": 11,
         "height": 1,
-        "content": "♫ Track title",
+        "content": "Track title",
         //"align": "center",
         "style": {
             "fg": "white",
@@ -62,7 +99,7 @@
         }
     },
 
-    "track_artist_options": {
+    "track_artist": {
         "top": 0,
         "left": 15,
         "width": 11,
