@@ -8,23 +8,18 @@ import { exit } from 'process';
 export let ui_options = {};
 
 export let player_box, button_play, button_prev, button_next, play_time, track_title, track_artist;
-export let tab_file, tab_yandex, tab_options, tab_header;
+export let tab_header;
 
 
 let center_buttons_active = true;
 let is_playing = false;
-let active_tab = 'file';
+let active_tab = 'files';
 
 // TODO : move to config file
 const FG_COLOR_INACTIVE = '#999999';
 const BUTTON_PLAY_BORDER_FG = '#ffffaa';
 const BUTTON_PLAY_MAIN_FG = 'yellow';
 const BUTTONS_PREV_NEXT_FG = 'yellow';
-
-const BUTTON_TAB_BG_INACTIVE = '#333333';
-const BUTTON_TAB_BG_ACTIVE = '#0da200';
-const BUTTON_TAB_FG_INACTIVE = '#999999';
-const BUTTON_TAB_FG_ACTIVE = 'white';
 
 const _button_play_border_fg = () => center_buttons_active ? BUTTON_PLAY_BORDER_FG : FG_COLOR_INACTIVE;
 const _button_play_main_fg = () => center_buttons_active ? BUTTON_PLAY_MAIN_FG : FG_COLOR_INACTIVE;
@@ -33,30 +28,8 @@ const _button_play_content = () => `{${_button_play_border_fg()}-fg}({/}{${_butt
 const _button_prev_content = () => `{${_buttons_prev_next_fg()}-fg} << `;
 const _button_next_content = () => `{${_buttons_prev_next_fg()}-fg} >> `;
 
-const _button_tab_options_content = () => {
-    if (active_tab === 'options') {
-        return `{${BUTTON_TAB_BG_ACTIVE}-bg}{${BUTTON_TAB_FG_ACTIVE}-fg}options{/}`;
-    } else {
-        return `{${BUTTON_TAB_BG_INACTIVE}-bg}{${BUTTON_TAB_FG_INACTIVE}-fg}options{/}`;
-    }
-};
-
-const _button_tab_yandex_content = () => {
-    if (active_tab === 'yandex') {
-        return `{${BUTTON_TAB_BG_ACTIVE}-bg}{${BUTTON_TAB_FG_ACTIVE}-fg}yandex{/}`;
-    } else {
-        return `{${BUTTON_TAB_BG_INACTIVE}-bg}{${BUTTON_TAB_FG_INACTIVE}-fg}yandex{/}`;
-    }
-};
-
-const _button_tab_file_content = () => {
-    if (active_tab === 'file') {
-        return `{${BUTTON_TAB_BG_ACTIVE}-bg}{${BUTTON_TAB_FG_ACTIVE}-fg}files{/}`;
-    } else {
-        return `{${BUTTON_TAB_BG_INACTIVE}-bg}{${BUTTON_TAB_FG_INACTIVE}-fg}files{/}`;
-    }
-};
-
+const _tab_display_name = () => active_tab == 'files' ? 'Files' : (active_tab == 'yandex' ? 'Yandex' : 'Config');
+const _tab_header_content = () => `switch to tab: ${_tab_display_name()}`;
 
 
 // import ui styles from json config
@@ -64,7 +37,7 @@ function load_ui_options() {
     try {
         return {
             ...json5.parse(readFileSync('./ui/player_box.json5', 'utf-8')),
-            ...json5.parse(readFileSync('./ui/tabs.json5', 'utf-8'))
+            ...json5.parse(readFileSync('./ui/tab_header.json5', 'utf-8'))
         };
     } catch (err) {
         logger.error('Failed to read or parse ui options from json5 file!', err);
@@ -72,37 +45,72 @@ function load_ui_options() {
     }
 }
 
-function init_tabs(screen) {
-    tab_options = blessed.box({
-        ...ui_options['tab_options'],
-        content: _button_tab_options_content()
-    });
+function init_tab_header(screen) {
+    tab_header = blessed.box(ui_options['tab_header']);
+    tab_header.setContent(_tab_header_content());
 
-    tab_yandex = blessed.box({
-        ...ui_options['tab_yandex'],
-        content: _button_tab_yandex_content()
-    });
-
-    tab_file = blessed.box({
-        ...ui_options['tab_file'],
-        content: _button_tab_file_content()
-    });
+    screen.append(tab_header);
 
     function change_tab(tab) {
         active_tab = tab;
-        tab_options.setContent(_button_tab_options_content());
-        tab_yandex.setContent(_button_tab_yandex_content());
-        tab_file.setContent(_button_tab_file_content());
+        tab_header.setContent(_tab_header_content());
+        show_tab_header();
         screen.render();
     }
 
-    tab_options.on('click', () => change_tab('options'));
-    tab_yandex.on('click', () => change_tab('yandex'));
-    tab_file.on('click', () => change_tab('file'));
+    let animation_frame = 0;
+    let animation_interval;
+    let animation_timeout;
 
-    screen.append(tab_options);
-    screen.append(tab_yandex);
-    screen.append(tab_file);
+    function show_tab_header() {
+        tab_header.top = -3;
+        animation_frame = 0;
+        clearTimeout(animation_timeout);
+        clearInterval(animation_interval);
+
+        animation_interval = setInterval(() => {
+            if(animation_frame >= 2 || tab_header.top >= 0) {
+                clearInterval(animation_interval);
+                animation_timeout = setTimeout(() => {
+                    hide_tab_header();
+                }, 1000)
+                return;
+            }
+
+            tab_header.top += 1;
+            screen.render();
+            
+            animation_frame++;
+        }, 200);
+    }
+
+    function hide_tab_header() {
+        animation_frame = 0;
+        clearTimeout(animation_timeout);
+        clearInterval(animation_interval);
+
+        animation_interval = setInterval(() => {
+            if(animation_frame >= 2 || tab_header.top <= -3) {
+                clearInterval(animation_interval);
+                return;
+            }
+
+            tab_header.top -= 1;
+            screen.render();
+            
+            animation_frame++;
+        }, 200);
+    }
+
+    screen.key(['tab'], () => {
+        if (active_tab === 'config') {
+            change_tab('files');
+        } else if (active_tab === 'files') {
+            change_tab('yandex');
+        } else if (active_tab === 'yandex') {
+            change_tab('config');
+        }
+    });
 }
 
 function init_player_box(screen) {
@@ -159,6 +167,6 @@ export function init_ui(screen) {
     ui_options = load_ui_options();
 
     init_player_box(screen);
-    init_tabs(screen);
+    init_tab_header(screen);
     screen.render();
 }
