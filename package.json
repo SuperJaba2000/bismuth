@@ -2,10 +2,23 @@
   "name": "yandex-music-cli",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./index.js",
   "author": "superjaba2000",
   "license": "ISC",
   "type": "module",
+  "pkg": {
+    "scripts": [
+      "./index.js",
+      "./logger.js",
+      "./ui/*.js"
+    ],
+    "assets": "./ui-options/*.json5",
+    "targets": [
+      "node18-win-x64"
+    ],
+    "outputPath": "dist"
+  },
+  "bin": "./index.js",
   "dependencies": {
     "json5": "^2.2.3",
     "reblessed": "^0.2.1",

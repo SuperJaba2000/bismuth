@@ -17,7 +17,7 @@ if (!fs.existsSync(logs_dir)) {
 const session_log_file_name = separated_logs ? path.join(
     logs_dir,
     `session-${new Date().toISOString().replace(/[:.]/g, "-")}`
-) : path.join(logs_dir, 'log.log');
+) : path.join(logs_dir, 'onelog');
 
 
 const logger = winston.createLogger({

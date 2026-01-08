@@ -7,15 +7,16 @@ const screen = blessed.screen({
     //fullUnicode: true
 });
 
+screen.key(['q', 'C-c'], () => {
+    return process.exit(0);
+});
+
+
 function init() {
     // TODO : fix process title
     process.title = 'Yandex Music CLI';
 
     init_ui(screen);
-
-    screen.key(['q', 'C-c'], () => {
-        return process.exit(0);
-    });
 
     screen.key(['r'], () => {
         init_ui(screen);
