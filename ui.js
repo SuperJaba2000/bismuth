@@ -95,7 +95,3 @@ export function init_ui(screen) {
 
     init_player_box(screen);
 }
-
-
-
-
