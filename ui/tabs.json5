@@ -1,0 +1,37 @@
+{
+    "tab_file": {
+        "top": 5,
+        "left": 1,
+        "width": 7,
+        "height": 3,
+        "content": "files",
+        "tags": true,
+        "style": {
+            "fg": "green",
+        }
+    },
+    
+    "tab_yandex": {
+        "top": 3,
+        "left": 1,
+        "width": 7,
+        "height": 3,
+        "content": "yandex",
+        "tags": true,
+        "style": {
+            "fg": "green",
+        }
+    },
+
+    "tab_options": {
+        "top": 1,
+        "left": 1,
+        "width": 7,
+        "height": 3,
+        "content": "options",
+        "tags": true,
+        "style": {
+            "fg": "green",
+        }
+    },
+}

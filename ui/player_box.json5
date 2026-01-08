@@ -9,10 +9,10 @@
             "type": "line"
         },
         "style": {
-            "fg": "white",
-            "border": {d
-                fg: "#ffffff",dfdfd
-            },d
+            "fg": "green",
+            "border": {
+                "fg": "#ffffff",
+            },
         }
     },
 
@@ -28,7 +28,7 @@
         "align": "center",
         "style": {
             "hover": {
-                bg: "gray"
+                "bg": "gray"
             }
         }
     },
@@ -46,7 +46,7 @@
         //"align": "center",
         "style": {
             "hover": {
-                bg: "gray"
+                "bg": "gray"
             }
         }
     },
@@ -64,7 +64,7 @@
         "align": "center",
         "style": {
             "hover": {
-                bg: "gray"
+                "bg": "gray"
             }
         }
     },
@@ -72,14 +72,14 @@
     "play_time": {
         "top": 0,
         "left": "100%-14",
-        "width": 12,
+        "width": 11,
         "height": 1,
         "content": "00:00|00:00",
         "align": "center",
         "style": {
             "fg": "white",
             "hover": {
-                "bg": "#600000"
+                "bg": "gray"
             }
         }
     },
