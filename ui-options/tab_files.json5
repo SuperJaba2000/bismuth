@@ -13,8 +13,10 @@
 
     "tab_files_filemanager": {
         "top": 1,
-        "left": 31,
-        "width": 80,
+        "left": 32,
+        "width": "100%-33",
+        "keys": {},
+        "vi": false,
         "mouse": true,
         "height": "100%-5",
         "style": {

@@ -1,13 +1,27 @@
 import blessed from 'reblessed';
+import { hide_tab_files, show_tab_files } from './tab-files.js';
 
 
 export let active_tab = 'files';
 
 export let tab_header;
 
+// flag to prevent double initialization of key handler
+let key_handler_started = false;
+
 const _tab_display_name = () => active_tab == 'files' ? 'Files' : (active_tab == 'yandex' ? 'Yandex' : 'Config');
 const _tab_header_content = () => `switch to tab: ${_tab_display_name()}`;
 
+
+export function show_active_tab() {
+    if (active_tab === 'config') {
+        hide_tab_files();
+    } else if (active_tab === 'files') {
+        show_tab_files();
+    } else if (active_tab === 'yandex') {
+        hide_tab_files();
+    }
+}
 
 export function init_tab_header(screen, ui_options) {
     tab_header = blessed.box(ui_options['tab_header']);
@@ -45,7 +59,7 @@ export function init_tab_header(screen, ui_options) {
             screen.render();
             
             animation_frame++;
-        }, 200);
+        }, 150);
     }
 
     function hide_tab_header() {
@@ -63,8 +77,11 @@ export function init_tab_header(screen, ui_options) {
             screen.render();
             
             animation_frame++;
-        }, 200);
+        }, 120);
     }
+
+    if(key_handler_started) 
+        return;
 
     screen.key(['tab'], () => {
         if (active_tab === 'config') {
@@ -74,5 +91,9 @@ export function init_tab_header(screen, ui_options) {
         } else if (active_tab === 'yandex') {
             change_tab('config');
         }
+
+        show_active_tab();
     });
+
+    key_handler_started = true;
 }

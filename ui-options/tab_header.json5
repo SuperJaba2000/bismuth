@@ -8,10 +8,13 @@
         "align": "center",
         "tags": true,
         "border": {
-            "type": "line"
+            "type": "line",
+            "fg": "white",
+            //"bg": "gray"
         },
         "style": {
             "fg": "green",
+            //"bg": "gray"
         }
     },
 }

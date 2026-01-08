@@ -5,8 +5,8 @@ import blessed from 'reblessed';
 import logger from './logger.js';
 
 import { init_player_box } from './ui/player-box.js';
-import { init_tab_header } from './ui/tab-header.js';
-import { init_tab_files, show_tab_files } from './ui/tab-files.js';
+import { show_active_tab, init_tab_header } from './ui/tab-header.js';
+import { hide_tab_files, init_tab_files, show_tab_files } from './ui/tab-files.js';
 
 
 export let ui_options = {};
@@ -28,22 +28,27 @@ function load_ui_options() {
     }
 }
 
+export function show_message(screen, text, timeout_s) {
+    message_box = blessed.message(ui_options['message_box']);
+    screen.append(message_box);
+
+    message_box.display(text, timeout_s);
+
+    screen.render();
+}
+
 export function init_ui(screen) {
     ui_options = load_ui_options();
 
     init_tab_files(screen, ui_options);
     init_tab_header(screen, ui_options);
     init_player_box(screen, ui_options);
-    show_tab_files();
 
-    screen.render();
-}
-
-export function show_message(screen, text, timeout_s) {
-    message_box = blessed.message(ui_options['message_box']);
-    screen.append(message_box);
-
-    message_box.display(text, timeout_s);
+    hide_tab_files();
+    //hide_tab_yandex();
+    //hide_tab_config();
+    
+    show_active_tab();
 
     screen.render();
 }
