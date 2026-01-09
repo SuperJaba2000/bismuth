@@ -1,7 +1,7 @@
 import ffmpeg from 'fluent-ffmpeg';
 import ffmpegPath from 'ffmpeg-static';
 import { audio_context } from './audio_system.js';
-import logger from '../logger.js';
+import { show_message } from '../ui.js';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
@@ -11,6 +11,8 @@ const FORMAT = 's16le';
 
 
 export async function decode(file_path, options) {
+    show_message('Decoding file...', 0);
+
     const chunks = [];
 
     const freq = options.freq || 44100;
@@ -18,7 +20,7 @@ export async function decode(file_path, options) {
     const bit_depth = options.bit_depth || 16;
 
     const bytes_per_sample = bit_depth / 8;
-    
+
     return new Promise((resolve, reject) => {
         ffmpeg(file_path)
             .audioCodec(CODEC)

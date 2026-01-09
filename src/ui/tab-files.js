@@ -1,6 +1,6 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
-import { ui_options } from '../ui.js';
+import { ui_options, show_message } from '../ui.js';
 import { load_track } from '../audio/audio_system.js';
 
 export let tab_files_separator, tab_files_filemanager;
@@ -18,6 +18,7 @@ export function init_tab_files() {
     tab_files_filemanager.cwd = process.cwd();
 
     tab_files_filemanager.on('file', async (file_path) => {
+        show_message('Loading file...', 0);
         load_track(file_path)
     });
 

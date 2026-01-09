@@ -13,7 +13,8 @@ import { hide_tab_files, init_tab_files, show_tab_files } from './ui/tab-files.j
 
 export let ui_options = {};
 
-export let message_box;
+let message_box;
+let message_box_initialized = false;
 
 // import ui styles from json config
 function load_ui_options() {
@@ -31,12 +32,18 @@ function load_ui_options() {
 }
 
 export function show_message(text, timeout_s) {
-    message_box = blessed.message(ui_options['message_box']);
-    screen.append(message_box);
+    if(!message_box_initialized) {
+        message_box = blessed.message(ui_options['message_box']);
+        screen.append(message_box);
+
+        message_box_initialized = true;
+    }
 
     message_box.display(text, timeout_s);
 
     screen.render();
+
+    return message_box;
 }
 
 export function init_ui() {
