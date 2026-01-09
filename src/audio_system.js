@@ -1,8 +1,12 @@
-import { StreamAudioContext} from '@descript/web-audio-js';
+import { StreamAudioContext } from '@descript/web-audio-js';
+import ffmpeg from 'fluent-ffmpeg';
+import ffmpegPath from 'ffmpeg-static';
 import Speaker from 'speaker';
 import { show_message } from './ui.js';
 import { clear_play_time_update, set_play_time_update, update_track_info } from './ui/player-box.js';
+import logger from './logger.js';
 
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 export let audio_buffer, audio_context, source_node, gain_node, speaker;
 
@@ -27,9 +31,9 @@ function reset_audio_system() {
     clear_play_time_update();
 }
 
-function init_source_node(set_buffer=false) {
+function init_source_node(set_buffer = false) {
     source_node = audio_context.createBufferSource();
-    if(set_buffer)
+    if (set_buffer)
         source_node.buffer = audio_buffer;
 
     source_node.connect(gain_node);
@@ -52,7 +56,7 @@ function init_audio_system() {
 }
 
 export function set_volume(volume) {
-    if(!initialized)
+    if (!initialized)
         return;
 
     gain_node.gain.value = Math.clamp(volume, 0, 1);
@@ -65,6 +69,65 @@ function play_from(offset) {
 
     audio_context.pipe(speaker);
     is_playing = true;
+}
+
+export function play_decode(file_path) {
+    const chunks = [];
+
+    ffmpeg(file_path)
+        .audioCodec('pcm_s16le') // Конвертируем в сырой PCM (как WAV)
+        .audioFrequency(44100)
+        .audioChannels(2)
+        .format('s16le') // Формат для сырых данных
+        .on('error', (err) => {
+            logger.error(err)
+        })
+        .pipe()
+        .on('data', chunk => chunks.push(chunk))
+        .on('end', async () => {
+            console.log('decode ended!')
+            const pcmData = Buffer.concat(chunks);
+
+            const numChannels = 2;
+            const sampleRate = 44100;
+
+            const bytesPerSample = 2;
+            const numSamples = pcmData.length / (numChannels * bytesPerSample);
+
+            audio_context = new StreamAudioContext();
+            audio_context.pipe(new Speaker({
+                channels: numChannels,
+                bitDepth: 16,
+                sampleRate
+            }))
+            audio_buffer = audio_context.createBuffer(
+                numChannels,
+                numSamples,
+                sampleRate
+            );
+
+            for (let channel = 0; channel < numChannels; channel++) {
+                const channelData = audio_buffer.getChannelData(channel);
+                const dataView = new DataView(pcmData.buffer);
+
+                for (let i = 0; i < numSamples; i++) {
+                    const byteOffset = (i * numChannels + channel) * bytesPerSample;
+                    const int16Value = dataView.getInt16(byteOffset, true);
+                    channelData[i] = Math.max(-1.0, int16Value / 32768.0);
+                }
+            }
+
+            source_node = audio_context.createBufferSource();
+            source_node.buffer = audio_buffer;
+            source_node.connect(audio_context.destination);
+            source_node.start(0);
+
+            audio_context.resume();
+            // source.onended = () => {
+            //     audioCtx.close();
+            //     resolve();
+            // };
+        });
 }
 
 export async function load_file(file_buffer, track_info) {
@@ -89,17 +152,17 @@ export async function load_file(file_buffer, track_info) {
 }
 
 export async function play_file(file_buffer) {
-    if(!initialized)
+    if (!initialized)
         init_audio_system();
 
-    if(!track_loaded)
+    if (!track_loaded)
         await load_file(file_buffer);
 
     play_from(0);
 }
 
 export function audio_play_pause() {
-    if(is_playing) {
+    if (is_playing) {
         current_time = audio_context.currentTime;
         source_node.stop();
         audio_context.suspend();

@@ -61,3 +61,90 @@ ReferenceError: update_current_time is not defined
     at Timeout._onTimeout (file:///Z:/yandex-music-cli/src/ui/player-box.js:37:9)
     at listOnTimeout (node:internal/timers:588:17)
     at process.processTimers (node:internal/timers:523:7)
+[2026-01-09 18:43:50] [ERROR]: unhandledRejection: Decoder does not support the audio format: mp3
+TypeError: Decoder does not support the audio format: mp3
+    at decode$1 (Z:\yandex-music-cli\node_modules\@descript\web-audio-js\build\web-audio-js.js:8023:7)
+    at StreamAudioContext.decodeAudioData (Z:\yandex-music-cli\node_modules\@descript\web-audio-js\build\web-audio-js.js:8123:21)
+    at load_file (file:///Z:/yandex-music-cli/src/audio_system.js:73:40)
+    at FileManager.<anonymous> (file:///Z:/yandex-music-cli/src/ui/tab-files.js:31:9)
+    at EventEmitter._emit (Z:\yandex-music-cli\node_modules\reblessed\dist\lib\events.js:81:24)
+    at EventEmitter.emit (Z:\yandex-music-cli\node_modules\reblessed\dist\lib\events.js:96:14)
+    at Z:\yandex-music-cli\node_modules\reblessed\dist\lib\widgets\filemanager.js:48:22
+    at FSReqCallback.oncomplete (node:fs:198:5)
+[2026-01-09 18:43:50] [ERROR]: unhandledRejection: Decoder does not support the audio format: mp3
+TypeError: Decoder does not support the audio format: mp3
+    at decode$1 (Z:\yandex-music-cli\node_modules\@descript\web-audio-js\build\web-audio-js.js:8023:7)
+    at StreamAudioContext.decodeAudioData (Z:\yandex-music-cli\node_modules\@descript\web-audio-js\build\web-audio-js.js:8123:21)
+    at load_file (file:///Z:/yandex-music-cli/src/audio_system.js:73:40)
+    at FileManager.<anonymous> (file:///Z:/yandex-music-cli/src/ui/tab-files.js:31:9)
+    at EventEmitter._emit (Z:\yandex-music-cli\node_modules\reblessed\dist\lib\events.js:81:24)
+    at EventEmitter.emit (Z:\yandex-music-cli\node_modules\reblessed\dist\lib\events.js:96:14)
+    at Z:\yandex-music-cli\node_modules\reblessed\dist\lib\widgets\filemanager.js:48:22
+    at FSReqCallback.oncomplete (node:fs:198:5)
+[2026-01-09 18:44:02] [ERROR]: uncaughtException: write after end
+Error: write after end
+    at writeAfterEnd (Z:\yandex-music-cli\node_modules\readable-stream\lib\_stream_writable.js:264:12)
+    at Writable.write (Z:\yandex-music-cli\node_modules\readable-stream\lib\_stream_writable.js:300:21)
+    at File.log (Z:\yandex-music-cli\node_modules\winston\lib\winston\transports\file.js:254:34)
+    at RejectionStream._write (Z:\yandex-music-cli\node_modules\winston\lib\winston\rejection-stream.js:46:29)
+    at doWrite (Z:\yandex-music-cli\node_modules\readable-stream\lib\_stream_writable.js:390:139)
+    at writeOrBuffer (Z:\yandex-music-cli\node_modules\readable-stream\lib\_stream_writable.js:381:5)
+    at Writable.write (Z:\yandex-music-cli\node_modules\readable-stream\lib\_stream_writable.js:302:11)
+    at DerivedLogger.ondata (Z:\yandex-music-cli\node_modules\readable-stream\lib\_stream_readable.js:629:20)
+    at DerivedLogger.emit (node:events:530:35)
+    at addChunk (Z:\yandex-music-cli\node_modules\readable-stream\lib\_stream_readable.js:279:12)
+[2026-01-09 20:19:59] [ERROR]: uncaughtException: /home/superjaba/yandex-music-cli/node_modules/speaker/build/Release/binding.node: invalid ELF header
+Error: /home/superjaba/yandex-music-cli/node_modules/speaker/build/Release/binding.node: invalid ELF header
+    at Object..node (node:internal/modules/cjs/loader:1919:18)
+    at Module.load (node:internal/modules/cjs/loader:1480:32)
+    at Module._load (node:internal/modules/cjs/loader:1299:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.require (node:internal/modules/cjs/loader:1503:12)
+    at require (node:internal/modules/helpers:152:16)
+    at bindings (/home/superjaba/yandex-music-cli/node_modules/bindings/bindings.js:112:48)
+    at Object.<anonymous> (/home/superjaba/yandex-music-cli/node_modules/speaker/index.js:9:36)
+    at Module._compile (node:internal/modules/cjs/loader:1760:14)
+[2026-01-09 20:20:24] [ERROR]: unhandledRejection: spawn Z:\yandex-music-cli\node_modules\ffmpeg-static\ffmpeg.exe ENOENT
+Error: spawn Z:\yandex-music-cli\node_modules\ffmpeg-static\ffmpeg.exe ENOENT
+    at ChildProcess._handle.onexit (node:internal/child_process:285:19)
+    at onErrorNT (node:internal/child_process:483:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+[2026-01-09 20:22:50] [ERROR]: unhandledRejection: reject is not defined
+ReferenceError: reject is not defined
+    at play_decode (file:///Z:/yandex-music-cli/src/audio_system.js:81:22)
+    at FileManager.<anonymous> (file:///Z:/yandex-music-cli/src/ui/tab-files.js:26:13)
+    at EventEmitter._emit (Z:\yandex-music-cli\node_modules\reblessed\dist\lib\events.js:81:24)
+    at EventEmitter.emit (Z:\yandex-music-cli\node_modules\reblessed\dist\lib\events.js:96:14)
+    at Z:\yandex-music-cli\node_modules\reblessed\dist\lib\widgets\filemanager.js:48:22
+    at FSReqCallback.oncomplete (node:fs:198:5)
+[2026-01-09 20:23:33] [ERROR]: uncaughtException: self.log is not a function
+TypeError: self.log is not a function
+    at DerivedLogger.<computed> (Z:\yandex-music-cli\node_modules\winston\lib\winston\create-logger.js:95:19)
+    at FfmpegCommand.emit (node:events:518:28)
+    at emitEnd (Z:\yandex-music-cli\node_modules\fluent-ffmpeg\lib\processor.js:422:16)
+    at Z:\yandex-music-cli\node_modules\fluent-ffmpeg\lib\processor.js:431:16
+    at Z:\yandex-music-cli\node_modules\fluent-ffmpeg\node_modules\async\lib\async.js:485:30
+    at Z:\yandex-music-cli\node_modules\fluent-ffmpeg\node_modules\async\lib\async.js:485:30
+    at Z:\yandex-music-cli\node_modules\fluent-ffmpeg\lib\capabilities.js:519:16
+    at ChildProcess.<anonymous> (Z:\yandex-music-cli\node_modules\fluent-ffmpeg\lib\processor.js:157:9)
+    at ChildProcess.emit (node:events:518:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:291:12)
+[2026-01-09 20:25:37] [ERROR]: unhandledRejection: Cannot read properties of undefined (reading 'createBuffer')
+TypeError: Cannot read properties of undefined (reading 'createBuffer')
+    at PassThrough.<anonymous> (file:///home/superjaba/yandex-music-cli/src/audio_system.js:92:42)
+    at PassThrough.emit (node:events:508:28)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+[2026-01-09 20:26:22] [ERROR]: unhandledRejection: source is not defined
+ReferenceError: source is not defined
+    at PassThrough.<anonymous> (file:///home/superjaba/yandex-music-cli/src/audio_system.js:97:20)
+    at PassThrough.emit (node:events:508:28)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+[2026-01-09 20:34:49] [ERROR]: unhandledRejection: audioCtx is not defined
+ReferenceError: audioCtx is not defined
+    at PassThrough.<anonymous> (file:///home/superjaba/yandex-music-cli/src/audio_system.js:98:13)
+    at PassThrough.emit (node:events:508:28)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
