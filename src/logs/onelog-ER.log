@@ -10,3 +10,13 @@ TypeError: Cannot read properties of undefined (reading 'numberOfChannels')
 [2026-01-09 14:44:12] [ERROR]: unhandledRejection: screen is not defined
 ReferenceError: screen is not defined
     at load_file (file:///home/superjaba/yandex-music-cli/src/audio_system.js:71:18)
+[2026-01-09 15:04:46] [ERROR]: uncaughtException: content.replace is not a function
+TypeError: content.replace is not a function
+    at Element.parseContent (/home/superjaba/yandex-music-cli/node_modules/reblessed/dist/lib/widgets/element.js:317:14)
+    at Element.setContent (/home/superjaba/yandex-music-cli/node_modules/reblessed/dist/lib/widgets/element.js:292:10)
+    at Timeout._onTimeout (file:///home/superjaba/yandex-music-cli/src/ui/player-box.js:36:19)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[2026-01-09 15:15:11] [ERROR]: unhandledRejection: update_track_info is not defined
+ReferenceError: update_track_info is not defined
+    at load_file (file:///home/superjaba/yandex-music-cli/src/audio_system.js:78:5)

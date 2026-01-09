@@ -1,11 +1,13 @@
 import { StreamAudioContext} from '@descript/web-audio-js';
 import Speaker from 'speaker';
 import { show_message } from './ui.js';
+import { set_play_time_update, update_track_info } from './ui/player-box.js';
 
 
-let audio_buffer, audio_context, source_node, gain_node, speaker;
+export let audio_buffer, audio_context, source_node, gain_node, speaker;
 
 let initialized = false;
+export let track_loaded = false;
 
 export let is_playing = false;
 export let current_time = 0;
@@ -20,6 +22,7 @@ function reset_audio_system() {
     current_time = 0;
 
     initialized = false;
+    track_loaded = false;
 }
 
 function init_audio_system() {
@@ -53,7 +56,7 @@ function play_from(offset) {
     
 }
 
-export async function load_file(file_buffer) {
+export async function load_file(file_buffer, track_info) {
     if(!initialized)
         init_audio_system();
 
@@ -69,6 +72,10 @@ export async function load_file(file_buffer) {
     audio_context.pipe(speaker);
 
     show_message('File loaded!', 1);
+    track_loaded = true;
+
+    set_play_time_update();
+    update_track_info(track_info);
 }
 
 export async function play_file(file_buffer) {

@@ -3,6 +3,7 @@ import { screen } from '../index.js';
 import { ui_options } from '../ui.js';
 import { readFileSync } from 'fs';
 import { load_file } from '../audio_system.js';
+import { basename } from 'path';
 
 
 
@@ -21,7 +22,12 @@ export function init_tab_files() {
 
     tab_files_filemanager.on('file', async (file_path) => {
         const file_buffer = readFileSync(file_path);
-        load_file(file_buffer)
+        const track_info = {
+            title: basename(file_path),
+            artist: 'Unknown',
+        };
+
+        load_file(file_buffer, track_info);
     });
 
     tab_files_filemanager.refresh(process.cwd(), () => {

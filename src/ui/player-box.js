@@ -1,7 +1,7 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options } from '../ui.js';
-import { is_playing, current_time, audio_play_pause } from '../audio_system.js';
+import { is_playing, audio_context, current_time, audio_play_pause, track_loaded } from '../audio_system.js';
 
 
 export let player_box, button_play, button_prev, button_next, play_time, track_title, track_artist;
@@ -20,6 +20,35 @@ const _buttons_prev_next_fg = () => center_buttons_active ? BUTTONS_PREV_NEXT_FG
 const _button_play_content = () => `{${_button_play_border_fg()}-fg}({/}{${_button_play_main_fg()}-fg} ${is_playing ? '=' : '▶︎'} {/}{${_button_play_border_fg()}-fg}){/}`;
 const _button_prev_content = () => `{${_buttons_prev_next_fg()}-fg} << `;
 const _button_next_content = () => `{${_buttons_prev_next_fg()}-fg} >> `;
+
+const _play_time_format = () => {
+    const _current_time = is_playing ? audio_context.currentTime : current_time;
+
+    const minutes = Math.floor(_current_time / 60);
+    const seconds = Math.floor(_current_time % 60);
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+};
+const _track_time_format = () => '00:00';
+const _play_time_content = () => track_loaded ? `${_play_time_format()}|${_track_time_format()}` : `00:00|00:00`;
+
+let play_time_update_interval;
+
+export function set_play_time_update() {
+    play_time_update_interval = setInterval(() => {
+        play_time.setContent(_play_time_content());
+        screen.render();
+    }, 500);
+}
+
+export function clear_play_time_update() {
+    clearInterval(play_time_update_interval);
+}
+
+export function update_track_info(track_info) {
+    track_title.setContent(track_info.title);
+    track_artist.setContent(track_info.artist);
+    screen.render();
+}
 
 export function init_player_box() {
     player_box = blessed.box(ui_options['player_box']);
