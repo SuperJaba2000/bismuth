@@ -14,7 +14,7 @@ screen.key(['q', 'C-c'], () => {
 
 function init() {
     // TODO : fix process title
-    process.title = 'Yandex Music CLI';
+    process.title = 'Serenity Player';
 
     init_ui(screen);
 

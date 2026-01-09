@@ -1,4 +1,5 @@
 import blessed from 'reblessed';
+import { audio_play_pause } from './tab-files.js';
 
 export let player_box, button_play, button_prev, button_next, play_time, track_title, track_artist;
 
@@ -9,7 +10,7 @@ const BUTTON_PLAY_MAIN_FG = 'yellow';
 const BUTTONS_PREV_NEXT_FG = 'yellow';
 
 export let center_buttons_active = true;
-export let is_playing = false;
+export let is_playing = true;
 
 const _button_play_border_fg = () => center_buttons_active ? BUTTON_PLAY_BORDER_FG : FG_COLOR_INACTIVE;
 const _button_play_main_fg = () => center_buttons_active ? BUTTON_PLAY_MAIN_FG : FG_COLOR_INACTIVE;
@@ -28,6 +29,8 @@ export function init_player_box(screen, ui_options) {
 
     // regenerate button_play content and rerender screen
     function play_pause() {
+        audio_play_pause();
+
         is_playing = !is_playing;
         button_play.setContent(_button_play_content());
         screen.render();

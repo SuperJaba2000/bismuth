@@ -1,27 +1,18 @@
 {
-  "name": "yandex-music-cli",
-  "version": "0.0.1",
-  "description": "",
-  "main": "./index.js",
+  "name": "sereniti",
+  "version": "0.1.0",
   "author": "superjaba2000",
   "license": "ISC",
   "type": "module",
-  "pkg": {
-    "scripts": [
-      "./index.js",
-      "./logger.js",
-      "./ui/*.js"
-    ],
-    "assets": "./ui-options/*.json5",
-    "targets": [
-      "node18-win-x64"
-    ],
-    "outputPath": "dist"
+  "scripts": {
+    "start": "node src/index.js"
   },
-  "bin": "./index.js",
   "dependencies": {
+    "@descript/web-audio-js": "^0.15.3-patched.6",
+    "audio-decode": "^2.2.3",
     "json5": "^2.2.3",
     "reblessed": "^0.2.1",
+    "speaker": "^0.5.5",
     "winston": "^3.19.0"
   }
 }
