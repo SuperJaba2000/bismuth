@@ -4,8 +4,7 @@
         "orientation" : "vertical",
         "top": 1,
         "left": 30,
-        "width": 1,
-        "height": "100%-5",
+        "height": "100%-6",
         "style": {
             "fg": "gray",
         }
@@ -18,7 +17,7 @@
         "keys": {},
         "vi": false,
         "mouse": true,
-        "height": "100%-5",
+        "height": "100%-6",
         "style": {
             "item": {
                 "fg": "white",

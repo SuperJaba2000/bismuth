@@ -110,7 +110,7 @@ function load_with_decode(file_path) {
     })
 }
 
-export function load(file_path) {
+export function load_track(file_path) {
     if(extname(file_path) === '.wav') {
         load_wav(file_path);
     } else {

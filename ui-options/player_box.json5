@@ -112,5 +112,16 @@
                 "fg": "white"
             }
         }
-    }
+    },
+
+    "progress_bar": {
+        "height": 1,
+        "top": '100%-3',
+        "left": 3,
+        "ch": "-",
+        "width": "100%-5",
+        "style": {
+            "fg": "#ffffaa",
+        }
+    },
 }
