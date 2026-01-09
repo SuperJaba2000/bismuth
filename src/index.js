@@ -1,7 +1,7 @@
 import blessed from 'reblessed';
 import { init_ui, show_message, ui_options } from './ui.js';
 
-const screen = blessed.screen({
+export const screen = blessed.screen({
     smartCSR: true,
     terminal: 'xterm-256color',
     //fullUnicode: true
@@ -16,12 +16,12 @@ function init() {
     // TODO : fix process title
     process.title = 'Serenity Player';
 
-    init_ui(screen);
+    init_ui();
 
     screen.key(['r'], () => {
-        init_ui(screen);
+        init_ui();
 
-        show_message(screen, 'Player reloaded!', 1);
+        show_message('Player reloaded!', 1);
     });
 }
 

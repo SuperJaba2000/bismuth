@@ -1,5 +1,6 @@
 import blessed from 'reblessed';
-import { audio_play_pause } from './tab-files.js';
+import { is_playing, current_time, audio_play_pause } from '../audio_system.js';
+import { screen } from '../index.js';
 
 export let player_box, button_play, button_prev, button_next, play_time, track_title, track_artist;
 
@@ -10,7 +11,6 @@ const BUTTON_PLAY_MAIN_FG = 'yellow';
 const BUTTONS_PREV_NEXT_FG = 'yellow';
 
 export let center_buttons_active = true;
-export let is_playing = true;
 
 const _button_play_border_fg = () => center_buttons_active ? BUTTON_PLAY_BORDER_FG : FG_COLOR_INACTIVE;
 const _button_play_main_fg = () => center_buttons_active ? BUTTON_PLAY_MAIN_FG : FG_COLOR_INACTIVE;
@@ -19,7 +19,7 @@ const _button_play_content = () => `{${_button_play_border_fg()}-fg}({/}{${_butt
 const _button_prev_content = () => `{${_buttons_prev_next_fg()}-fg} << `;
 const _button_next_content = () => `{${_buttons_prev_next_fg()}-fg} >> `;
 
-export function init_player_box(screen, ui_options) {
+export function init_player_box(ui_options) {
     player_box = blessed.box(ui_options['player_box']);
 
     button_play = blessed.box({
@@ -31,9 +31,9 @@ export function init_player_box(screen, ui_options) {
     function play_pause() {
         audio_play_pause();
 
-        is_playing = !is_playing;
         button_play.setContent(_button_play_content());
         screen.render();
+
     }
 
     button_play.on('click', play_pause);

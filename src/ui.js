@@ -8,6 +8,8 @@ import { init_player_box } from './ui/player-box.js';
 import { show_active_tab, init_tab_header } from './ui/tab-header.js';
 import { hide_tab_files, init_tab_files, show_tab_files } from './ui/tab-files.js';
 
+import { screen } from './index.js';
+
 
 export let ui_options = {};
 
@@ -28,7 +30,7 @@ function load_ui_options() {
     }
 }
 
-export function show_message(screen, text, timeout_s) {
+export function show_message(text, timeout_s) {
     message_box = blessed.message(ui_options['message_box']);
     screen.append(message_box);
 
@@ -37,12 +39,12 @@ export function show_message(screen, text, timeout_s) {
     screen.render();
 }
 
-export function init_ui(screen) {
+export function init_ui() {
     ui_options = load_ui_options();
 
-    init_tab_files(screen, ui_options);
-    init_tab_header(screen, ui_options);
-    init_player_box(screen, ui_options);
+    init_tab_files(ui_options);
+    init_tab_header(ui_options);
+    init_player_box(ui_options);
 
     hide_tab_files();
     //hide_tab_yandex();

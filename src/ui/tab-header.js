@@ -1,6 +1,8 @@
 import blessed from 'reblessed';
 import { hide_tab_files, show_tab_files } from './tab-files.js';
 
+import { screen } from '../index.js';
+
 
 export let active_tab = 'files';
 
@@ -23,7 +25,7 @@ export function show_active_tab() {
     }
 }
 
-export function init_tab_header(screen, ui_options) {
+export function init_tab_header(ui_options) {
     tab_header = blessed.box(ui_options['tab_header']);
     tab_header.setContent(_tab_header_content());
 
