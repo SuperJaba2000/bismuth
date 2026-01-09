@@ -1,14 +1,14 @@
 import json5 from 'json5';
 import { readFileSync } from 'fs';
 import { exit } from 'process';
-import blessed from 'reblessed';
 import logger from './logger.js';
+import blessed from 'reblessed';
 
+import { screen } from './index.js';
 import { init_player_box } from './ui/player-box.js';
 import { show_active_tab, init_tab_header } from './ui/tab-header.js';
 import { hide_tab_files, init_tab_files, show_tab_files } from './ui/tab-files.js';
 
-import { screen } from './index.js';
 
 
 export let ui_options = {};
@@ -42,9 +42,9 @@ export function show_message(text, timeout_s) {
 export function init_ui() {
     ui_options = load_ui_options();
 
-    init_tab_files(ui_options);
-    init_tab_header(ui_options);
-    init_player_box(ui_options);
+    init_tab_files();
+    init_tab_header();
+    init_player_box();
 
     hide_tab_files();
     //hide_tab_yandex();

@@ -1,6 +1,7 @@
 import blessed from 'reblessed';
 import { init_ui, show_message, ui_options } from './ui.js';
 
+
 export const screen = blessed.screen({
     smartCSR: true,
     terminal: 'xterm-256color',

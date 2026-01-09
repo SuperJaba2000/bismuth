@@ -1,12 +1,14 @@
 import blessed from 'reblessed';
-import fs from 'fs';
+import { screen } from '../index.js';
+import { ui_options } from '../ui.js';
+import { readFileSync } from 'fs';
 import { load_file } from '../audio_system.js';
 
-import { screen } from '../index.js';
+
 
 export let tab_files_separator, tab_files_filemanager;
 
-export function init_tab_files(ui_options) {
+export function init_tab_files() {
     tab_files_separator = blessed.line(ui_options['tab_files_separator']);
 
     screen.append(tab_files_separator);
@@ -18,7 +20,7 @@ export function init_tab_files(ui_options) {
     tab_files_filemanager.cwd = process.cwd();
 
     tab_files_filemanager.on('file', async (file_path) => {
-        const file_buffer = fs.readFileSync(file_path);
+        const file_buffer = readFileSync(file_path);
         load_file(file_buffer)
     });
 

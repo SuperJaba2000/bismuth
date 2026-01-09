@@ -1,6 +1,8 @@
 import blessed from 'reblessed';
-import { is_playing, current_time, audio_play_pause } from '../audio_system.js';
 import { screen } from '../index.js';
+import { ui_options } from '../ui.js';
+import { is_playing, current_time, audio_play_pause } from '../audio_system.js';
+
 
 export let player_box, button_play, button_prev, button_next, play_time, track_title, track_artist;
 
@@ -19,7 +21,7 @@ const _button_play_content = () => `{${_button_play_border_fg()}-fg}({/}{${_butt
 const _button_prev_content = () => `{${_buttons_prev_next_fg()}-fg} << `;
 const _button_next_content = () => `{${_buttons_prev_next_fg()}-fg} >> `;
 
-export function init_player_box(ui_options) {
+export function init_player_box() {
     player_box = blessed.box(ui_options['player_box']);
 
     button_play = blessed.box({
