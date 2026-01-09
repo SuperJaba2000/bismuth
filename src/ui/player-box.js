@@ -1,7 +1,7 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options } from '../ui.js';
-import { is_playing, update_current_time, current_time, audio_play_pause, track_loaded } from '../audio_system.js';
+import { is_playing, update_current_time, current_time, audio_play_pause, track_loaded } from '../audio/audio_system.js';
 
 
 export let player_box, button_play, button_prev, button_next, play_time, track_title, track_artist;

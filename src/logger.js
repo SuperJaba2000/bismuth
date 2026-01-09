@@ -6,7 +6,7 @@ import winston from 'winston';
 const separated_logs = false;
 
 
-const logs_dir = path.join(import.meta.dirname, '/logs');
+const logs_dir = path.join(process.cwd(), '/logs');
 
 // create logs directory if it doesn't exist
 if (!fs.existsSync(logs_dir)) {

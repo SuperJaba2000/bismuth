@@ -1,8 +1,7 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options } from '../ui.js';
-import { readFileSync } from 'fs';
-import { load_file, play_decode } from '../audio_system.js';
+import { load } from '../audio/audio_system.js';
 import path, { basename } from 'path';
 
 
@@ -21,18 +20,7 @@ export function init_tab_files() {
     tab_files_filemanager.cwd = process.cwd();
 
     tab_files_filemanager.on('file', async (file_path) => {
-        const file_buffer = readFileSync(file_path);
-        if(path.extname(file_path) !== '.wav') {
-            play_decode(file_path);
-            return;    
-        }
-
-        const track_info = {
-            title: basename(file_path),
-            artist: 'Unknown',
-        };
-
-        load_file(file_buffer, track_info);
+        load(file_path)
     });
 
     tab_files_filemanager.refresh(process.cwd(), () => {

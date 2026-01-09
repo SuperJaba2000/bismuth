@@ -1,5 +1,6 @@
 import blessed from 'reblessed';
 import { init_ui, show_message, ui_options } from './ui.js';
+import { init_audio_system } from './audio/audio_system.js';
 
 
 export const screen = blessed.screen({
@@ -17,6 +18,7 @@ function init() {
     // TODO : fix process title
     process.title = 'Serenity Player';
 
+    init_audio_system();
     init_ui();
 
     screen.key(['r'], () => {
@@ -24,6 +26,12 @@ function init() {
 
         show_message('Player reloaded!', 1);
     });
+
+    screen.key(['a'], () => {
+        init_audio_system();
+
+        show_message('Audio system reloaded!', 1);
+    })
 }
 
 
