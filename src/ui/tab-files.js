@@ -22,6 +22,7 @@ export function init_tab_files() {
 
     tab_files_filemanager.on('file', async (file_path) => {
         const file_buffer = readFileSync(file_path);
+        console.log(basename(file_path));
         const track_info = {
             title: basename(file_path),
             artist: 'Unknown',

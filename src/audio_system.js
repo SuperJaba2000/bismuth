@@ -1,7 +1,7 @@
 import { StreamAudioContext} from '@descript/web-audio-js';
 import Speaker from 'speaker';
 import { show_message } from './ui.js';
-import { set_play_time_update, update_track_info } from './ui/player-box.js';
+import { clear_play_time_update, set_play_time_update, update_track_info } from './ui/player-box.js';
 
 
 export let audio_buffer, audio_context, source_node, gain_node, speaker;
@@ -23,20 +23,30 @@ function reset_audio_system() {
 
     initialized = false;
     track_loaded = false;
+
+    clear_play_time_update();
+}
+
+function init_source_node(set_buffer=false) {
+    source_node = audio_context.createBufferSource();
+    if(set_buffer)
+        source_node.buffer = audio_buffer;
+
+    source_node.connect(gain_node);
+
+    return source_node;
 }
 
 function init_audio_system() {
-    if(initialized)
-        reset_audio_system();
+    reset_audio_system();
 
     audio_context = new StreamAudioContext();
     gain_node = audio_context.createGain();
-    source_node = audio_context.createBufferSource();
+    init_source_node();
 
-    source_node.connect(gain_node);
     gain_node.connect(audio_context.destination);
 
-    set_volume(1);
+    set_volume(0.5);
 
     initialized = true;
 }
@@ -49,19 +59,19 @@ export function set_volume(volume) {
 }
 
 function play_from(offset) {
-    audio_context.resume();
+    init_source_node(true);
     source_node.start(0, offset);
-    is_playing = true;
+    audio_context.resume();
 
-    
+    audio_context.pipe(speaker);
+    is_playing = true;
 }
 
 export async function load_file(file_buffer, track_info) {
-    if(!initialized)
-        init_audio_system();
+    init_audio_system();
 
     audio_buffer = await audio_context.decodeAudioData(file_buffer.buffer);
-    source_node.buffer = audio_buffer;
+    init_source_node(true);
 
     speaker = new Speaker({
         channels: audio_buffer.numberOfChannels,
@@ -82,19 +92,24 @@ export async function play_file(file_buffer) {
     if(!initialized)
         init_audio_system();
 
-    await load_file(file_buffer);
+    if(!track_loaded)
+        await load_file(file_buffer);
+
     play_from(0);
 }
 
 export function audio_play_pause() {
     if(is_playing) {
-        current_time += audio_context.currentTime;
-        audio_context.suspend();
+        current_time = audio_context.currentTime;
         source_node.stop();
+        audio_context.suspend();
         is_playing = false;
     } else {
         play_from(current_time);
-        console.log(current_time)
         is_playing = true;
     }
+}
+
+export function update_current_time() {
+    current_time = audio_context.currentTime;
 }

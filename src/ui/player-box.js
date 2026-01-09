@@ -1,7 +1,7 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options } from '../ui.js';
-import { is_playing, audio_context, current_time, audio_play_pause, track_loaded } from '../audio_system.js';
+import { is_playing, update_current_time, current_time, audio_play_pause, track_loaded } from '../audio_system.js';
 
 
 export let player_box, button_play, button_prev, button_next, play_time, track_title, track_artist;
@@ -22,10 +22,9 @@ const _button_prev_content = () => `{${_buttons_prev_next_fg()}-fg} << `;
 const _button_next_content = () => `{${_buttons_prev_next_fg()}-fg} >> `;
 
 const _play_time_format = () => {
-    const _current_time = is_playing ? audio_context.currentTime : current_time;
 
-    const minutes = Math.floor(_current_time / 60);
-    const seconds = Math.floor(_current_time % 60);
+    const minutes = Math.floor(current_time / 60);
+    const seconds = Math.floor(current_time % 60);
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 };
 const _track_time_format = () => '00:00';
@@ -35,6 +34,7 @@ let play_time_update_interval;
 
 export function set_play_time_update() {
     play_time_update_interval = setInterval(() => {
+        update_current_time();
         play_time.setContent(_play_time_content());
         screen.render();
     }, 500);
@@ -64,7 +64,6 @@ export function init_player_box() {
 
         button_play.setContent(_button_play_content());
         screen.render();
-
     }
 
     button_play.on('click', play_pause);
