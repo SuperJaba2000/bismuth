@@ -11,6 +11,8 @@ const FG_COLOR_INACTIVE = '#999999';
 const BUTTON_PLAY_BORDER_FG = '#ffffaa';
 const BUTTON_PLAY_MAIN_FG = 'yellow';
 const BUTTONS_PREV_NEXT_FG = 'yellow';
+const FG_PROGRESS_BAR_ACTIVE = 'yellow';
+const FG_PROGRESS_BAR_INACTIVE = '#ffffaa';
 
 const MAX_TRACK_TITLE_LENGTH = 30;
 const MAX_TRACK_ARTIST_LENGTH = 20;
@@ -24,7 +26,13 @@ const _button_play_content = () => `{${_button_play_border_fg()}-fg}({/}{${_butt
 const _button_prev_content = () => `{${_buttons_prev_next_fg()}-fg} << `;
 const _button_next_content = () => `{${_buttons_prev_next_fg()}-fg} >> `;
 
-//const _progress_bar_content = () => `{${FG_COLOR_INACTIVE}-fg} ${_play_time_content()} {/}`;
+const _progress_bar_length = () => process.stdout.columns - 5;
+const _progress_bar_content = () => {
+    const percent = track_loaded ? Math.floor((current_time / track_info.duration) * 100) : 0;
+    const active_length = Math.floor((percent / 100) * _progress_bar_length());
+    const inactive_length = _progress_bar_length() - active_length;
+    return `{${FG_PROGRESS_BAR_ACTIVE}-fg}${'-'.repeat(active_length)}{/}{${FG_PROGRESS_BAR_INACTIVE}-fg}${'-'.repeat(inactive_length)}{/}`;
+};
 
 const _play_time_format = () => {
     const minutes = Math.floor(current_time / 60);
@@ -44,6 +52,7 @@ let play_time_update_interval;
 export function set_play_time_update() {
     play_time_update_interval = setInterval(() => {
         update_current_time();
+        progress_bar.setContent(_progress_bar_content());
         play_time.setContent(_play_time_content());
         screen.render();
     }, 500);
@@ -63,7 +72,10 @@ export function update_track_info(track_info) {
 }
 
 export function init_player_box() {
-    progress_bar = blessed.box(ui_options['progress_bar']);
+    progress_bar = blessed.box({
+        ...ui_options['progress_bar'],
+        content: _progress_bar_content()
+    });
     player_box = blessed.box(ui_options['player_box']);
 
     button_play = blessed.box({

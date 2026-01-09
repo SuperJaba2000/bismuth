@@ -118,7 +118,8 @@
         "height": 1,
         "top": '100%-3',
         "left": 3,
-        "ch": "-",
+        //"ch": "-",
+        "tags": true,
         "width": "100%-5",
         "style": {
             "fg": "#ffffaa",
