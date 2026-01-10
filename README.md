@@ -25,13 +25,12 @@ Bismuth - минималистичный (не в плане ресурсов) �
 
 ## Установка
 
-1. Установите Node.js (>= 16): 
-   nodejs.org
+1. Установите Node.js (>= 16)
 
 2. Клонируйте репозиторий:
    ```
-   git clone <url-репозитория>
-   cd yandex-music-cli
+   git clone https://github.com/SuperJaba2000/bismuth
+   cd bismuth
    ```
 
 3. Установите зависимости:
