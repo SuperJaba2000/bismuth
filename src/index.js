@@ -16,7 +16,7 @@ screen.key(['q', 'C-c'], () => {
 
 function init() {
     // TODO : fix process title
-    process.title = 'Serenity Player';
+    process.title = 'Bismuth Player';
 
     init_audio_system();
     init_ui();
