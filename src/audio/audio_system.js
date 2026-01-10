@@ -2,60 +2,67 @@ import { StreamAudioContext } from '@descript/web-audio-js';
 import { readFileSync } from 'fs';
 import { extname } from 'path';
 import Speaker from 'speaker';
+import { clamp } from '../util.js';
 import { show_message } from '../ui.js';
 import { clear_play_time_update, set_play_time_update, update_track_info } from '../ui/player-box.js';
 import { decode } from './decoder.js';
 import logger from '../logger.js';
 import { get_track_info } from './audio_info.js';
 
-export let audio_buffer, audio_context, source_node, gain_node, speaker;
-
+export let audio_context, source_node, gain_node, speaker;
 export let track_loaded = false;
 export let track_info = {};
-
 export let is_playing = false;
-export let current_time = 0;
 
+let audio_buffer;
+let playback_start_time = 0;
+let playback_offset = 0;
+export let current_position = 0;
 
-// initialize audio system (only once)
+// simplified initialization (for the first time only)
 export function init_audio_system() {
     audio_context = new StreamAudioContext();
     gain_node = audio_context.createGain();
     gain_node.connect(audio_context.destination);
 }
 
-// remove all data that can be associated with previous track
+// deleting everything that could refer to the previous track
 export function reset_audio_system() {
     if (source_node) {
-        source_node.stop();
+        try {
+            source_node.stop();
+        } catch (e) { }
         source_node = null;
     }
-    
-    if (audio_context && audio_context.state !== 'closed') {
-        audio_context.close().catch(() => {});
-    }
-    
+
     if (speaker) {
         speaker.end();
         speaker = null;
     }
-    
+
     audio_buffer = null;
 
-    audio_context = new StreamAudioContext();
-    gain_node = audio_context.createGain();
-    gain_node.connect(audio_context.destination);
-    
+    if (!audio_context || audio_context.state === 'closed') {
+        audio_context = new StreamAudioContext();
+        gain_node = audio_context.createGain();
+        gain_node.connect(audio_context.destination);
+    }
+
     is_playing = false;
     track_loaded = false;
     track_info = {};
-    current_time = 0;
-    
+    playback_start_time = 0;
+    playback_offset = 0;
+    current_position = 0;
+
     clear_play_time_update();
 }
 
-// call at every change of audio_buffer (numberOfChannels, sampleRate can change!)
 function create_speaker() {
+    if (speaker) {
+        speaker.end();
+    }
+
     speaker = new Speaker({
         channels: audio_buffer.numberOfChannels || 2,
         sampleRate: audio_buffer.sampleRate || 44100,
@@ -66,100 +73,138 @@ function create_speaker() {
 }
 
 export function set_volume(volume) {
-    gain_node.gain.value = Math.clamp(volume, 0, 1);
+    if (gain_node) {
+        gain_node.gain.value = clamp(volume, 0, 1);
+    }
 }
 
-function create_source_node() {
+function play_from(position) {
+    if (source_node) {
+        try {
+            source_node.stop();
+        } catch (e) { }
+
+        source_node = null;
+    }
+
     source_node = audio_context.createBufferSource();
     source_node.buffer = audio_buffer;
     source_node.connect(gain_node);
-}
 
-// only if speaker is initialized
-function play_from(timestamp) {
-    create_source_node();
+    playback_start_time = audio_context.currentTime;
+    playback_offset = position;
 
-    audio_context.pipe(speaker);
+    source_node.start(0, position);
 
-    source_node.start(0, timestamp);
-    audio_context.resume();
+    if (audio_context.state === 'suspended') {
+        audio_context.resume();
+    }
 
     is_playing = true;
+    current_position = position;
 }
 
+function get_current_position() {
+    if (!is_playing || !audio_buffer) {
+        return current_position;
+    }
 
+    const elapsed = audio_context.currentTime - playback_start_time;
+    const new_position = playback_offset + elapsed;
 
-// only .wav files (raw PCM)
+    if (new_position >= audio_buffer.duration) {
+        current_position = audio_buffer.duration;
+        is_playing = false;
+        return current_position;
+    }
+
+    current_position = new_position;
+    return current_position;
+}
+
 async function load_wav(file_path) {
-    const file_buffer = readFileSync(file_path);
-    audio_buffer = await audio_context.decodeAudioData(file_buffer.buffer);
-
-    create_speaker();
-
-    track_loaded = true;
-    show_message('File loaded!', 1);
-
-    // ui
-    set_play_time_update();
-
-    track_info = await get_track_info(file_path);
-    update_track_info(track_info);
-}
-
-// supports .mp3, .wav, .ogg, .aac, ...
-function load_with_decode(file_path) {
-    decode(file_path, {
-        freq: 44100,
-        channels: 2,
-        bit_depth: 16
-    }).then(async decoded_audio_buffer => {
-        audio_buffer = decoded_audio_buffer;
+    try {
+        const file_buffer = readFileSync(file_path);
+        audio_buffer = await audio_context.decodeAudioData(file_buffer.buffer);
 
         create_speaker();
 
+        track_loaded = true;
+        track_info = await get_track_info(file_path);
+
+        show_message('File loaded!', 1);
+        update_track_info(track_info);
+        set_play_time_update();
+    } catch (error) {
+        logger.error('Failed to load WAV:', error);
+        show_message('Failed to load file!', 1);
+    }
+}
+
+async function load_with_decode(file_path) {
+    try {
+        const decoded_audio_buffer = await decode(file_path, {
+            freq: 44100,
+            channels: 2,
+            bit_depth: 16
+        });
+
+        audio_buffer = decoded_audio_buffer;
+        create_speaker();
 
         track_loaded = true;
-        show_message('File loaded!', 1);
-
-        // ui
-        set_play_time_update();
-
         track_info = await get_track_info(file_path);
+
+        show_message('File loaded!', 1);
         update_track_info(track_info);
-    }).catch(err => {
-        logger.error(err);
+        set_play_time_update();
+    } catch (error) {
+        logger.error('Failed to decode file:', error);
         show_message('Failed to decode file!', 1);
-    })
+    }
 }
 
 export function load_track(file_path) {
     reset_audio_system();
 
-    if(extname(file_path) === '.wav') {
+    if (extname(file_path) === '.wav') {
         load_wav(file_path);
     } else {
         load_with_decode(file_path);
     }
 }
 
-
 export function audio_play_pause() {
-    if(!track_loaded) return;
+    if (!track_loaded || !audio_buffer) return;
 
     if (is_playing) {
-        current_time = audio_context.currentTime;
+        current_position = get_current_position();
 
-        source_node.stop();
+        try {
+            source_node.stop();
+        } catch (e) { }
+        source_node = null;
+
         audio_context.suspend();
-
         is_playing = false;
     } else {
-        play_from(current_time);
-
-        is_playing = true;
+        play_from(current_position);
     }
 }
 
-export function update_current_time() {
-    current_time = audio_context.currentTime;
+export function update_current_position() {
+    if (!track_loaded) return 0;
+    return get_current_position();
+}
+
+export function rewind_to(position) {
+    if (!track_loaded || !audio_buffer) return;
+
+    const new_position = clamp(position, 0, audio_buffer.duration);
+
+    if (is_playing) {
+        play_from(new_position);
+    } else {
+        current_position = new_position;
+    }
 }

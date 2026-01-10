@@ -1,4 +1,4 @@
-# Bismuth - Player
+# Bismuth
 
 ## Описание
 

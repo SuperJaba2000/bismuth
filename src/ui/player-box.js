@@ -1,7 +1,7 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options } from '../ui.js';
-import { is_playing, update_current_time, current_time, audio_play_pause, track_loaded, track_info } from '../audio/audio_system.js';
+import { is_playing, update_current_position, current_position, audio_play_pause, track_loaded, track_info, rewind_to } from '../audio/audio_system.js';
 
 
 export let progress_bar, player_box, button_play, button_prev, button_next, play_time, track_title, track_artist;
@@ -28,15 +28,15 @@ const _button_next_content = () => `{${_buttons_prev_next_fg()}-fg} >> `;
 
 const _progress_bar_length = () => process.stdout.columns - 5;
 const _progress_bar_content = () => {
-    const percent = track_loaded ? Math.floor((current_time / track_info.duration) * 100) : 0;
+    const percent = track_loaded ? Math.floor((current_position / track_info.duration) * 100) : 0;
     const active_length = Math.floor((percent / 100) * _progress_bar_length());
     const inactive_length = _progress_bar_length() - active_length;
     return `{${FG_PROGRESS_BAR_ACTIVE}-fg}${'-'.repeat(active_length)}{/}{${FG_PROGRESS_BAR_INACTIVE}-fg}${'-'.repeat(inactive_length)}{/}`;
 };
 
 const _play_time_format = () => {
-    const minutes = Math.floor(current_time / 60);
-    const seconds = Math.floor(current_time % 60);
+    const minutes = Math.floor(current_position / 60);
+    const seconds = Math.floor(current_position % 60);
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 };
 const _track_time_format = () => {
@@ -51,7 +51,7 @@ let play_time_update_interval;
 
 export function set_play_time_update() {
     play_time_update_interval = setInterval(() => {
-        update_current_time();
+        update_current_position();
         progress_bar.setContent(_progress_bar_content());
         play_time.setContent(_play_time_content());
         screen.render();
@@ -71,11 +71,34 @@ export function update_track_info(track_info) {
     screen.render();
 }
 
-export function init_player_box() {
+function init_progress_bar() {
     progress_bar = blessed.box({
         ...ui_options['progress_bar'],
         content: _progress_bar_content()
     });
+
+    let down_on_progress_bar = false;
+
+    progress_bar.on('mouse', async data => {
+        if(data.action === 'mousedown' && data.button === 'left') {
+            down_on_progress_bar = true;
+        } else if(data.action === 'mouseup' && data.button === 'left') {
+            if(down_on_progress_bar) {
+                down_on_progress_bar = false;
+                
+                const relative_x = data.x - progress_bar.left;
+                const percent = relative_x / _progress_bar_length();
+                const timestamp = percent * track_info.duration;
+            
+                rewind_to(timestamp);
+            }
+        }
+    })
+}
+
+export function init_player_box() {
+    init_progress_bar();
+
     player_box = blessed.box(ui_options['player_box']);
 
     button_play = blessed.box({
