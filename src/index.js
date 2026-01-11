@@ -1,6 +1,11 @@
+import logger from './logger.js';
 import blessed from 'reblessed';
-import { init_ui, show_message, ui_options } from './ui.js';
+import { init_ui, show_message } from './ui.js';
 import { init_audio_system, reset_audio_system } from './audio/audio_system.js';
+
+// TODO: move to config
+const DEBUG = true;
+
 
 
 export const screen = blessed.screen({
@@ -8,33 +13,51 @@ export const screen = blessed.screen({
     terminal: 'xterm-256color',
     //fullUnicode: true
 });
+logger.info('screen created');
+
 
 screen.key(['q', 'C-c'], () => {
     return process.exit(0);
 });
 
 
+
 function init() {
-    // TODO : fix process title
+    logger.info('starting the main initialization...');
+
+    // set window title
     process.title = 'Bismuth Player';
 
     init_audio_system();
     init_ui();
 
+    // debug function
     screen.key(['r'], () => {
+        if(!DEBUG) return;
+
         init_ui();
 
+        logger.info('ui reloaded by hotkey');
         show_message('Player reloaded!', 1);
     });
 
+    // debug function
     screen.key(['a'], () => {
+        if(!DEBUG) return;
+
         reset_audio_system();
 
+        logger.info('audio system reloaded by hotkey');
         show_message('Audio system reloaded!', 1);
     })
+
+    logger.info('main initialization finished');
 }
 
 
+
 (function main() {
+    logger.info('hello from main()!');
+
     init();
 })();

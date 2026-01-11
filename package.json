@@ -5,8 +5,19 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "prebuild": "webpack --mode production",
+    "build": "pkg . -t node16-windows-x64"
   },
+  "pkg": {
+    "scripts": "dist/bundle.cjs",
+    "assets": [
+      "ui-options/*.json5",
+      "node_modules/reblessed/dist/lib/widgets/*.js",
+      "node_modules/**/*"
+    ]
+  },
+  "bin": "dist/bundle.cjs",
   "dependencies": {
     "@descript/web-audio-js": "^0.15.3-patched.6",
     "audio-decode": "^2.2.3",
@@ -17,5 +28,13 @@
     "reblessed": "^0.2.1",
     "speaker": "^0.5.5",
     "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "babel-loader": "^10.0.0",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-node-externals": "^3.0.0"
   }
 }

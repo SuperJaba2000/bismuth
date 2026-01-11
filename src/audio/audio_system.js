@@ -1,3 +1,4 @@
+import logger from '../logger.js';
 import { StreamAudioContext } from '@descript/web-audio-js';
 import { readFileSync } from 'fs';
 import { extname } from 'path';
@@ -6,7 +7,6 @@ import { clamp } from '../util.js';
 import { show_message } from '../ui.js';
 import { clear_play_time_update, set_play_time_update, update_track_info } from '../ui/player-box.js';
 import { decode } from './decoder.js';
-import logger from '../logger.js';
 import { get_track_info } from './audio_info.js';
 
 export let audio_context, source_node, gain_node, speaker;
@@ -19,15 +19,26 @@ let playback_start_time = 0;
 let playback_offset = 0;
 export let current_position = 0;
 
+function log(message, ...args) {
+    logger.info(`[AUDIO] ${message}`, ...args);
+}
+
+
 // simplified initialization (for the first time only)
 export function init_audio_system() {
+    log('starting audio system initialization...');
+
     audio_context = new StreamAudioContext();
     gain_node = audio_context.createGain();
     gain_node.connect(audio_context.destination);
+
+    log('audio system initialized successfully');
 }
 
 // deleting everything that could refer to the previous track
 export function reset_audio_system() {
+    log('resetting audio system...');
+
     if (source_node) {
         try {
             source_node.stop();
@@ -46,6 +57,8 @@ export function reset_audio_system() {
         audio_context = new StreamAudioContext();
         gain_node = audio_context.createGain();
         gain_node.connect(audio_context.destination);
+
+        set_volume(0.5);
     }
 
     is_playing = false;
@@ -55,10 +68,14 @@ export function reset_audio_system() {
     playback_offset = 0;
     current_position = 0;
 
+    log('call clear_play_time_update()');
     clear_play_time_update();
+
+    log('audio system reset successfully');
 }
 
 function create_speaker() {
+    log('creating new speaker...');
     if (speaker) {
         speaker.end();
     }
@@ -70,15 +87,19 @@ function create_speaker() {
     });
 
     audio_context.pipe(speaker);
+    log('speaker created successfully');
 }
 
 export function set_volume(volume) {
+    log('changing volume to', volume);
     if (gain_node) {
         gain_node.gain.value = clamp(volume, 0, 1);
     }
 }
 
 function play_from(position) {
+    log('play_from() called, position:', position);
+
     if (source_node) {
         try {
             source_node.stop();
@@ -102,6 +123,8 @@ function play_from(position) {
 
     is_playing = true;
     current_position = position;
+
+    log('play_from() successfully finished');
 }
 
 function get_current_position() {
@@ -123,6 +146,7 @@ function get_current_position() {
 }
 
 async function load_wav(file_path) {
+    log('loading wav file...');
     try {
         const file_buffer = readFileSync(file_path);
         audio_buffer = await audio_context.decodeAudioData(file_buffer.buffer);
@@ -133,6 +157,8 @@ async function load_wav(file_path) {
         track_info = await get_track_info(file_path);
 
         show_message('File loaded!', 1);
+        log('track successfully loaded!');
+
         update_track_info(track_info);
         set_play_time_update();
     } catch (error) {
@@ -142,6 +168,7 @@ async function load_wav(file_path) {
 }
 
 async function load_with_decode(file_path) {
+    log('trying to decode file...');
     try {
         const decoded_audio_buffer = await decode(file_path, {
             freq: 44100,
@@ -156,20 +183,25 @@ async function load_with_decode(file_path) {
         track_info = await get_track_info(file_path);
 
         show_message('File loaded!', 1);
+        log('track successfully decoded and loaded!');
+
         update_track_info(track_info);
         set_play_time_update();
     } catch (error) {
-        logger.error('Failed to decode file:', error);
+        logger.error('Failed to decode file: ', error);
         show_message('Failed to decode file!', 1);
     }
 }
 
 export function load_track(file_path) {
+    log('loading track: ', file_path);
+
     reset_audio_system();
 
     if (extname(file_path) === '.wav') {
         load_wav(file_path);
     } else {
+        // TODO : check file extension before decoding
         load_with_decode(file_path);
     }
 }

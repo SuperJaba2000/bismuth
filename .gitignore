@@ -1,7 +1,14 @@
 /node_modules
+
 /logs
-*.exe
-filemanager.js
+/bismuth-logs
+
+/src/filemanager.js
+
 /audio
 /dist
-migration.*
+
+*.sh
+*.bat
+
+*.exe

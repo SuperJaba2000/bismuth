@@ -1,7 +1,8 @@
 import ffmpeg from 'fluent-ffmpeg';
-import ffmpegPath from 'ffmpeg-static';
+import ffmpegPath from './ffmpeg-path.js';
 import { audio_context } from './audio_system.js';
 import { show_message } from '../ui.js';
+import logger from '../logger.js';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
@@ -28,7 +29,7 @@ export async function decode(file_path, options) {
             .audioChannels(channels)
             .format(FORMAT)
             .on('error', (err) => {
-                console.log(err);
+                logger.error('decoding failed!');
                 reject(err);
             })
             .pipe()
