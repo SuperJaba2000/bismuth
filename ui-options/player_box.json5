@@ -124,4 +124,20 @@
             fg: "#ffffaa",
         }
     },
+
+    button_repeat_type: {
+        top: 0,
+        left: "100%-18",
+        width: 3,
+        height: 1,
+        // generate content in script
+        //content: _button_repeat_type_content(),
+        tags: true,
+        align: "center",
+        style: {
+            hover: {
+                bg: "gray"
+            }
+        }
+    }
 }

@@ -1,10 +1,26 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options } from '../ui.js';
-import { is_playing, update_current_position, current_position, audio_play_pause, track_loaded, track_info, rewind_to } from '../audio/audio_system.js';
+import { is_playing, 
+    update_current_position, 
+    current_position, 
+    repeat_type,
+    audio_play_pause, 
+    track_loaded, 
+    track_info, 
+    audio_change_repeat_type,
+    rewind_to } from '../audio/audio_system.js';
 
 
-export let progress_bar, player_box, button_play, button_prev, button_next, play_time, track_title, track_artist;
+export let progress_bar, 
+    player_box, 
+    button_play, 
+    button_prev, 
+    button_next, 
+    play_time, 
+    track_title, 
+    track_artist,
+    button_repeat_type;
 
 // TODO : move to config file
 const FG_COLOR_INACTIVE = '#999999';
@@ -32,6 +48,16 @@ const _progress_bar_content = () => {
     const active_length = Math.floor(percent * _progress_bar_length());
     const inactive_length = _progress_bar_length() - active_length;
     return `\n{${FG_PROGRESS_BAR_ACTIVE}-fg}${'-'.repeat(active_length)}{/}{${FG_PROGRESS_BAR_INACTIVE}-fg}${'-'.repeat(inactive_length)}{/}`;
+};
+
+const _button_repeat_type_content = () => {
+    if(repeat_type == 'none') {
+        return '(-)';
+    } else if(repeat_type == 'playlist') {
+        return '(P)';
+    } else if(repeat_type == 'track') {
+        return '(T)';
+    }
 };
 
 const _play_time_format = () => {
@@ -97,13 +123,30 @@ function init_progress_bar() {
     })
 }
 
+function init_button_repeat_type() {
+    button_repeat_type = blessed.box({
+        ...ui_options['button_repeat_type'],
+        content: _button_repeat_type_content()
+    });
+
+    button_repeat_type.on('click', () => {
+        audio_change_repeat_type();
+    })
+}
+
 export function update_play_pause() {
     button_play.setContent(_button_play_content());
     screen.render();
 }
 
+export function update_repeat_type() {
+    button_repeat_type.setContent(_button_repeat_type_content());
+    screen.render();
+}
+
 export function init_player_box() {
     init_progress_bar();
+    init_button_repeat_type();
 
     player_box = blessed.box(ui_options['player_box']);
 
@@ -147,6 +190,7 @@ export function init_player_box() {
 
     // medium
     player_box.append(play_time);
+    player_box.append(button_repeat_type);
 
     // very important to show
     player_box.append(button_play);

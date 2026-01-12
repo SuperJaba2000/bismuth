@@ -5,7 +5,7 @@ import { extname } from 'path';
 import Speaker from 'speaker';
 import { clamp } from '../util.js';
 import { show_message } from '../ui.js';
-import { clear_play_time_update, set_play_time_update, update_track_info, update_play_pause } from '../ui/player-box.js';
+import { clear_play_time_update, set_play_time_update, update_track_info, update_play_pause, update_repeat_type } from '../ui/player-box.js';
 import { decode } from './decoder.js';
 import { get_track_info } from './audio_info.js';
 
@@ -13,6 +13,9 @@ export let audio_context, source_node, gain_node, speaker;
 export let track_loaded = false;
 export let track_info = {};
 export let is_playing = false;
+
+// none, playlist, track
+export let repeat_type = 'none';
 
 let audio_buffer;
 let playback_start_time = 0;
@@ -22,7 +25,6 @@ export let current_position = 0;
 function log(message, ...args) {
     logger.info(`[AUDIO] ${message}`, ...args);
 }
-
 
 // simplified initialization (for the first time only)
 export function init_audio_system() {
@@ -98,6 +100,18 @@ export function set_volume(volume) {
     }
 }
 
+export function audio_change_repeat_type() {
+    if(repeat_type == 'none') {
+        repeat_type = 'playlist';
+    } else if(repeat_type == 'playlist') {
+        repeat_type = 'track';
+    } else if(repeat_type == 'track') {
+        repeat_type = 'none';
+    }
+
+    update_repeat_type();
+}
+
 function play_from(position) {
     log('play_from() called, position:', position);
 
@@ -139,10 +153,15 @@ function get_current_position() {
     const new_position = playback_offset + elapsed;
 
     if (new_position >= audio_buffer.duration) {
-        current_position = audio_buffer.duration;
-        is_playing = false;
-        update_play_pause();
-        return current_position;
+        if(repeat_type === 'none' || repeat_type === 'playlist') {
+            current_position = audio_buffer.duration;
+            is_playing = false;
+            update_play_pause();
+            return current_position;
+        }else if(repeat_type === 'track') {
+            play_from(0);
+            return 0;
+        }
     }
 
     current_position = new_position;
@@ -223,7 +242,7 @@ export function audio_play_pause() {
 
         audio_context.suspend();
         is_playing = false;
-        
+
         update_play_pause();
     } else {
         play_from(current_position);
