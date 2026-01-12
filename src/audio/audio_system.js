@@ -5,7 +5,7 @@ import { extname } from 'path';
 import Speaker from 'speaker';
 import { clamp } from '../util.js';
 import { show_message } from '../ui.js';
-import { clear_play_time_update, set_play_time_update, update_track_info } from '../ui/player-box.js';
+import { clear_play_time_update, set_play_time_update, update_track_info, update_play_pause } from '../ui/player-box.js';
 import { decode } from './decoder.js';
 import { get_track_info } from './audio_info.js';
 
@@ -70,6 +70,7 @@ export function reset_audio_system() {
 
     log('call clear_play_time_update()');
     clear_play_time_update();
+    update_play_pause();
 
     log('audio system reset successfully');
 }
@@ -124,6 +125,8 @@ function play_from(position) {
     is_playing = true;
     current_position = position;
 
+    update_play_pause();
+
     log('play_from() successfully finished');
 }
 
@@ -138,6 +141,7 @@ function get_current_position() {
     if (new_position >= audio_buffer.duration) {
         current_position = audio_buffer.duration;
         is_playing = false;
+        update_play_pause();
         return current_position;
     }
 
@@ -219,6 +223,8 @@ export function audio_play_pause() {
 
         audio_context.suspend();
         is_playing = false;
+        
+        update_play_pause();
     } else {
         play_from(current_position);
     }

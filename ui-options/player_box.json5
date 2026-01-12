@@ -1,128 +1,127 @@
 {
-    "player_box": {
-        "top": "100%-3",
-        "left": 2,
-        "width": "100%-3",
-        "height": 3,
-        "content": " ♫ ",
-        "border": {
-            "type": "line"
+    player_box: {
+        top: "100%-3",
+        left: 2,
+        width: "100%-3",
+        height: 3,
+        content: " ♫ ",
+        border: {
+            type: "line"
         },
-        "style": {
-            "fg": "green",
-            "border": {
-                "fg": "#ffffff",
+        style: {
+            fg: "green",
+            border: {
+                fg: "white",
             },
         }
     },
 
-    "button_play": {
-        "top": 0,
+    button_play: {
+        top: 0,
         // TODO : try to centrate with align
-        "left": "50%-3",
-        "width": 5,
-        "height": 1,
+        left: "50%-3",
+        width: 5,
+        height: 1,
         // generate content in script
-        //"content": _button_play_content(),
-        "tags": true,
-        "align": "center",
-        "style": {
-            "hover": {
-                "bg": "gray"
+        //content: _button_play_content(),
+        tags: true,
+        align: "center",
+        style: {
+            hover: {
+                bg: "gray"
             }
         }
     },
 
-    "button_prev": {
-        "top": 0,
+    button_prev: {
+        top: 0,
         // TODO : try to centrate with align
-        "left": "50%-7",
-        //"left": "40%",
-        "width": 4,
-        "height": 1,
+        left: "50%-7",
+        //left: "40%",
+        width: 4,
+        height: 1,
         // generate content in script
-        //"content": _button_prev_content(),
-        "tags": true,
-        //"align": "center",
-        "style": {
-            "hover": {
-                "bg": "gray"
+        //content: _button_prev_content(),
+        tags: true,
+        //align: center,
+        style: {
+            hover: {
+                bg: "gray"
             }
         }
     },
 
-    "button_next": {
-        "top": 0,
+    button_next: {
+        top: 0,
         // TODO : try to centrate with align
-        "left": "50%+2",
-        //"left": "60%",
-        "width": 4,
-        "height": 1,
+        left: "50%+2",
+        //left: "60%",
+        width: 4,
+        height: 1,
         // generate content in script
-        //"content": _button_prev_content(),
-        "tags": true,
-        "align": "center",
-        "style": {
-            "hover": {
-                "bg": "gray"
+        //content: _button_prev_content(),
+        tags: true,
+        align: "center",
+        style: {
+            hover: {
+                bg: "gray"
             }
         }
     },
 
-    "play_time": {
-        "top": 0,
-        "left": "100%-14",
-        "width": 11,
-        "height": 1,
-        "content": "00:00|00:00",
-        "align": "center",
-        "style": {
-            "fg": "white",
-            "hover": {
-                "bg": "gray"
+    play_time: {
+        top: 0,
+        left: "100%-14",
+        width: 11,
+        height: 1,
+        content: "00:00|00:00",
+        align: "center",
+        style: {
+            fg: "white",
+            hover: {
+                bg: "gray"
             }
         }
     },
 
-    "track_title": {
-        "top": 0,
-        "left": 3,
-        "width": 11,
-        "height": 1,
-        "content": "Track title",
-        //"align": "center",
-        "style": {
-            "fg": "white",
-            "hover": {
-                "underline": true
+    track_title: {
+        top: 0,
+        left: 3,
+        width: 11,
+        height: 1,
+        content: "Track title",
+        //align: center,
+        style: {
+            fg: "white",
+            hover: {
+                underline: true
             }
         }
     },
 
-    "track_artist": {
-        "top": 0,
-        "left": 15,
-        "width": 11,
-        "height": 1,
-        "content": "- artist",
-        //"align": "center",
-        "style": {
-            "fg": "#aaaaaa",
-            "hover": {
-                "fg": "white"
+    track_artist: {
+        top: 0,
+        left: 15,
+        width: 11,
+        height: 1,
+        content: "- artist",
+        //align: center,
+        style: {
+            fg: "#aaaaaa",
+            hover: {
+                fg: "white"
             }
         }
     },
 
-    "progress_bar": {
-        "height": 2,
-        "top": '100%-4',
-        "left": 3,
-        //"ch": "-",
-        "tags": true,
-        "width": "100%-5",
-        "style": {
-            "fg": "#ffffaa",
+    progress_bar: {
+        top: '100%-4',
+        left: 3,
+        height: 2,
+        tags: true,
+        width: "100%-5",
+        style: {
+            fg: "#ffffaa",
         }
     },
 }

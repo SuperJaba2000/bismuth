@@ -68,6 +68,7 @@ export function update_track_info(track_info) {
     track_artist.setContent(track_info.artist);
     track_artist.width = Math.min(track_info.artist.length, MAX_TRACK_ARTIST_LENGTH);
     track_artist.left = track_title.left + track_title.width;
+
     screen.render();
 }
 
@@ -94,6 +95,11 @@ function init_progress_bar() {
             }
         }
     })
+}
+
+export function update_play_pause() {
+    button_play.setContent(_button_play_content());
+    screen.render();
 }
 
 export function init_player_box() {
@@ -154,11 +160,13 @@ export function init_player_box() {
 export function show_player_box() {
     progress_bar.show();
     player_box.show();
+
     screen.render();
 }
 
 export function hide_player_box() {
     progress_bar.hide();
     player_box.hide();
+
     screen.render();
 }

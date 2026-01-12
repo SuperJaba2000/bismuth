@@ -1,31 +1,30 @@
 {
-    "tab_files_separator": {
-        "type": "line",
-        "orientation" : "vertical",
-        "top": 1,
-        "left": 30,
-        "height": "100%-6",
-        "style": {
-            "fg": "gray",
+    tab_files_separator: {
+        orientation : "vertical",
+        top: 1,
+        left: 30,
+        height: "100%-5",
+        style: {
+            fg: "gray",
         }
     },
 
-    "tab_files_filemanager": {
-        "top": 1,
-        "left": 32,
-        "width": "100%-33",
-        "keys": {},
-        "vi": false,
-        "mouse": true,
-        "height": "100%-6",
-        "style": {
-            "item": {
-                "fg": "white",
+    tab_files_filemanager: {
+        top: 1,
+        left: 32,
+        width: "100%-33",
+        keys: {},
+        vi: false,
+        mouse: true,
+        height: "100%-5",
+        style: {
+            item: {
+                fg: "white",
                 
             },
-            "selected": {
-                "bg": "#bcbcbcff",
-                "fg": "black"
+            selected: {
+                bg: "#bcbcbc",
+                fg: "black"
             }
         }
     }
