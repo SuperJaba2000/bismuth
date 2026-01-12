@@ -9,15 +9,15 @@
     "prebuild": "webpack --mode production",
     "build": "pkg . -t node16-windows-x64"
   },
+  "bin": "dist/bundle.cjs",
   "pkg": {
     "scripts": "dist/bundle.cjs",
     "assets": [
-      "ui-options/*.json5",
+      "ui-options/**/*",
       "node_modules/reblessed/dist/lib/widgets/*.js",
       "node_modules/**/*"
     ]
   },
-  "bin": "dist/bundle.cjs",
   "dependencies": {
     "@descript/web-audio-js": "^0.15.3-patched.6",
     "audio-decode": "^2.2.3",

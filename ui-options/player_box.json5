@@ -115,8 +115,8 @@
     },
 
     "progress_bar": {
-        "height": 1,
-        "top": '100%-3',
+        "height": 2,
+        "top": '100%-4',
         "left": 3,
         //"ch": "-",
         "tags": true,

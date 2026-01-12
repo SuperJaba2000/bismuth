@@ -2,15 +2,17 @@ import logger from './logger.js';
 import blessed from 'reblessed';
 import { init_ui, show_message } from './ui.js';
 import { init_audio_system, reset_audio_system } from './audio/audio_system.js';
+import { active_tab } from './ui/tab-header.js';
+import { init_tab_welcome } from './ui/tab-welcome.js';
 
 // TODO: move to config
 const DEBUG = true;
 
 
-
 export const screen = blessed.screen({
     smartCSR: true,
     terminal: 'xterm-256color',
+    title: 'Bismuth Player',
     //fullUnicode: true
 });
 logger.info('screen created');
@@ -20,6 +22,10 @@ screen.key(['q', 'C-c'], () => {
     return process.exit(0);
 });
 
+screen.on('resize', () => {
+    if(active_tab === 'welcome')
+        init_tab_welcome();
+});
 
 
 function init() {
@@ -51,9 +57,8 @@ function init() {
         show_message('Audio system reloaded!', 1);
     })
 
-    logger.info('main initialization finished');
+    logger.info('main initialization finished!\n');
 }
-
 
 
 (function main() {

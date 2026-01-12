@@ -28,10 +28,10 @@ const _button_next_content = () => `{${_buttons_prev_next_fg()}-fg} >> `;
 
 const _progress_bar_length = () => process.stdout.columns - 5;
 const _progress_bar_content = () => {
-    const percent = track_loaded ? Math.floor((current_position / track_info.duration) * 100) : 0;
-    const active_length = Math.floor((percent / 100) * _progress_bar_length());
+    const percent = track_loaded ? (current_position / track_info.duration) : 0;
+    const active_length = Math.floor(percent * _progress_bar_length());
     const inactive_length = _progress_bar_length() - active_length;
-    return `{${FG_PROGRESS_BAR_ACTIVE}-fg}${'-'.repeat(active_length)}{/}{${FG_PROGRESS_BAR_INACTIVE}-fg}${'-'.repeat(inactive_length)}{/}`;
+    return `\n{${FG_PROGRESS_BAR_ACTIVE}-fg}${'-'.repeat(active_length)}{/}{${FG_PROGRESS_BAR_INACTIVE}-fg}${'-'.repeat(inactive_length)}{/}`;
 };
 
 const _play_time_format = () => {
@@ -55,7 +55,7 @@ export function set_play_time_update() {
         progress_bar.setContent(_progress_bar_content());
         play_time.setContent(_play_time_content());
         screen.render();
-    }, 500);
+    }, 100);
 }
 
 export function clear_play_time_update() {
@@ -149,4 +149,16 @@ export function init_player_box() {
 
     screen.append(player_box);
     screen.append(progress_bar);
+}
+
+export function show_player_box() {
+    progress_bar.show();
+    player_box.show();
+    screen.render();
+}
+
+export function hide_player_box() {
+    progress_bar.hide();
+    player_box.hide();
+    screen.render();
 }

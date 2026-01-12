@@ -1,82 +1,116 @@
-import { log } from 'console';
 import fs from 'fs';
 import path from 'path';
 import winston from 'winston';
+import { tmpdir } from 'os';
 
+const FORCE_CONSOLE_LOGS = process.env.FORCE_CONSOLE_LOGS === 'true' || false;
 
+const getLogsDir = () => {
+    try {
+        const homeDir = process.env.HOME || process.env.USERPROFILE || process.cwd();
+        
+        const possiblePaths = [
+            path.join(process.cwd(), 'bismuth-logs'),
+            path.join(homeDir, 'bismuth-logs'),
+            //path.join(__dirname, 'bismuth-logs')
+        ];
+        
+        for (const logPath of possiblePaths) {
+            try {
+                if (!fs.existsSync(logPath)) {
+                    fs.mkdirSync(logPath, { recursive: true });
+                }
+                
+                const testFile = path.join(logPath, 'test.txt');
+                fs.writeFileSync(testFile, 'test');
+                fs.unlinkSync(testFile);
+                
+                console.log(`Логи будут сохранены в: ${logPath}`);
+                return logPath;
+            } catch (err) {
+                continue;
+            }
+        }
+        
+        const tempDir = path.join(tmpdir(), 'bismuth-logs');
+        if (!fs.existsSync(tempDir)) {
+            fs.mkdirSync(tempDir, { recursive: true });
+        }
+        console.log(`Logs will be saved to temp dir: ${tempDir}`);
+        return tempDir;
+        
+    } catch (error) {
+        console.error('Error getting logs dir: ', error);
+        return path.join(tmpdir(), 'bismuth-logs');
+    }
+};
 
-// create separate log file for each session
-const SEPARATED_SESSION_LOGS = false;
-// create separate log file for uncaught exceptions and rejections ('-ER' = Exceptions and Rejections)
-const SEPARATED_ERROR_LOGS = false;
-
-// only if not SEPARATED_SESSION_LOGS
-const CLEAR_OLD_LOGS = true;
-
-
-const logs_dir = path.join(process.cwd(), '/bismuth-logs');
-
-// create logs directory if it doesn't exist
-if (!fs.existsSync(logs_dir)) {
-    fs.mkdirSync(logs_dir);
-}
-
+const logs_dir = getLogsDir();
 const base_log_file_name = path.join(logs_dir, 'bismuth');
 
-// unique log file name for current session
-const session_log_file_name = path.join(logs_dir,`session-${new Date().toISOString().replace(/[:.]/g, "-")}`);
 
-const log_file_name = SEPARATED_SESSION_LOGS ? session_log_file_name : base_log_file_name;
+let logger;
 
-// separate log file for uncaught exceptions and rejections (if SEPARATED_ERROR_LOGS is true)
-const ER_log_file_name = log_file_name + '-ER';
-const error_log_file_name = SEPARATED_ERROR_LOGS ? ER_log_file_name : base_log_file_name;
+try {
+    logger = winston.createLogger({
+        level: "info",
 
-// clear old logs
-if(!SEPARATED_SESSION_LOGS && CLEAR_OLD_LOGS) {
-    if(fs.existsSync(log_file_name + '.log')) {
-        fs.unlinkSync(log_file_name + '.log');
+        format: winston.format.combine(
+            winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+            winston.format.printf(({ timestamp, level, message }) => {
+                return `[${timestamp}] [${level.toUpperCase()}]: ${message}`;
+            })
+        ),
+
+        transports: FORCE_CONSOLE_LOGS ? [new winston.transports.Console()] : [],
+
+        exceptionHandlers: [
+            new winston.transports.Console()
+        ],
+        rejectionHandlers: [
+            new winston.transports.Console()
+        ],
+        exitOnError: false
+    });
+    
+    // trying to add file transport
+    try {
+        const fileTransport = new winston.transports.File({ 
+            filename: base_log_file_name + '.log',
+            maxsize: 5242880, // 5MB
+            maxFiles: 5
+        });
+        
+        logger.add(fileTransport);
+        
+        // errors and rejections handlers
+        logger.exceptions.handle(
+            new winston.transports.File({ filename: base_log_file_name + '-exceptions.log' })
+        );
+        
+        logger.rejections.handle(
+            new winston.transports.File({ filename: base_log_file_name + '-rejections.log' })
+        );
+        
+    } catch (fileError) {
+        logger.warn(`Error adding file transport: ${fileError.message}`);
     }
+    
+    logger.info('-------------------------------------')
+    logger.info('Logger initialized');
+    
+} catch (error) {
+    // Fallback: простой console логгер
+    console.error('Error initializing logger: ', error);
 
-    if(fs.existsSync(error_log_file_name + '.log')) {
-        fs.unlinkSync(error_log_file_name + '.log');
-    }
+    logger = {
+        info: (msg) => console.log(`[INFO]: ${msg}`),
+        error: (msg) => console.error(`[ERROR]: ${msg}`),
+        warn: (msg) => console.warn(`[WARN]: ${msg}`),
+        debug: (msg) => console.debug(`[DEBUG]: ${msg}`)
+    };
+
+    logger.info('Using fallback logger (console)');
 }
-
-
-const logger = winston.createLogger({
-    level: "info",
-
-    format: winston.format.combine(
-        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-
-        winston.format.printf(({ timestamp, level, message }) => {
-            return `[${timestamp}] [${level.toUpperCase()}]: ${message}`;
-        })
-    ),
-
-    transports: [
-        //new winston.transports.Console(),
-        new winston.transports.File({ filename: log_file_name + '.log' })
-    ],
-
-    // automatically handle uncaught exceptions
-    exceptionHandlers: [
-        new winston.transports.Console(),
-        // separate log file for uncaught exceptions and rejections
-        new winston.transports.File({ filename: error_log_file_name + '.log' }),
-    ],
-
-    // automatically handle rejected promises
-    rejectionHandlers: [
-        new winston.transports.Console(),
-        // separate log file for uncaught exceptions and rejections
-        new winston.transports.File({ filename: error_log_file_name + '.log' }),
-    ],
-
-    exitOnError: false
-});
-
-logger.info('Logger initialized.');
 
 export default logger;
