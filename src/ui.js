@@ -5,11 +5,10 @@ import logger from './logger.js';
 import blessed from 'reblessed';
 
 import { screen } from './index.js';
-import { hide_player_box, init_player_box } from './ui/player-box.js';
+import { hide_player_box, init_player_box } from './ui/player-box/player-box.js';
 import { show_active_tab, init_tab_header, tab_header, show_tab_header } from './ui/tab-header.js';
 import { hide_tab_files, init_tab_files } from './ui/tab-files.js';
 import { init_tab_welcome } from './ui/tab-welcome.js';
-
 
 
 export let ui_options = {};

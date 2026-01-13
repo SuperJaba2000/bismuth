@@ -1,7 +1,7 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options } from '../ui.js';
-import { generate_logo, logo_height } from './logo.js';
+import { generate_logo, logo_height, logo_width } from './logo.js';
 
 
 let tab_welcome_logo;
@@ -17,7 +17,7 @@ export function init_tab_welcome() {
     tab_welcome_separator = blessed.box({
         ...ui_options['tab_welcome_separator'],
         top: ui_options['tab_welcome_logo'].top + logo_height,
-        //width: logo_width + 6
+        content: '~'.repeat(logo_width + 6)
     });
 
     tab_welcome_hotkeys = blessed.box({
@@ -29,7 +29,13 @@ export function init_tab_welcome() {
     screen.append(tab_welcome_logo);
     screen.append(tab_welcome_separator);
     screen.append(tab_welcome_hotkeys);
+
     screen.render();
+}
+
+// deprecated
+export function resize_logo() {
+    tab_welcome_logo.setContent(generate_logo());
 }
 
 export function show_tab_welcome() {

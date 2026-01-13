@@ -15,7 +15,7 @@
         left: 3,
         width: "100%-6",
         height: 1,
-        ch: "~",
+        align: "center",
         style: {
             fg: "gray"
         }
@@ -31,6 +31,7 @@
         // change height depending on logo height
         style: {
             fg: "white",
+            blink: true,
             //bg: "cyan"
 
             // TODO

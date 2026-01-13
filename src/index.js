@@ -2,8 +2,6 @@ import logger from './logger.js';
 import blessed from 'reblessed';
 import { init_ui, show_message } from './ui.js';
 import { init_audio_system, reset_audio_system } from './audio/audio_system.js';
-import { active_tab } from './ui/tab-header.js';
-import { init_tab_welcome } from './ui/tab-welcome.js';
 
 // TODO: move to config
 const DEBUG = true;
@@ -22,10 +20,11 @@ screen.key(['q', 'C-c'], () => {
     return process.exit(0);
 });
 
-screen.on('resize', () => {
-    if(active_tab === 'welcome')
-        init_tab_welcome();
-});
+// deprecated: welcome logo is now aligned to the center
+// screen.on('resize', () => {
+//     if(active_tab === 'welcome')
+//         init_tab_welcome();
+// });
 
 
 function init() {

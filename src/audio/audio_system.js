@@ -5,7 +5,7 @@ import { extname } from 'path';
 import Speaker from 'speaker';
 import { clamp } from '../util.js';
 import { show_message } from '../ui.js';
-import { clear_play_time_update, set_play_time_update, update_track_info, update_play_pause, update_repeat_type } from '../ui/player-box.js';
+import { clear_play_time_update, set_play_time_update, update_player_box } from '../ui/player-box/player-box.js';
 import { decode } from './decoder.js';
 import { get_track_info } from './audio_info.js';
 
@@ -72,7 +72,7 @@ export function reset_audio_system() {
 
     log('call clear_play_time_update()');
     clear_play_time_update();
-    update_play_pause();
+    update_player_box();
 
     log('audio system reset successfully');
 }
@@ -109,7 +109,7 @@ export function audio_change_repeat_type() {
         repeat_type = 'none';
     }
 
-    update_repeat_type();
+    update_player_box();
 }
 
 function play_from(position) {
@@ -139,7 +139,7 @@ function play_from(position) {
     is_playing = true;
     current_position = position;
 
-    update_play_pause();
+    update_player_box();
 
     log('play_from() successfully finished');
 }
@@ -156,7 +156,7 @@ function get_current_position() {
         if(repeat_type === 'none' || repeat_type === 'playlist') {
             current_position = audio_buffer.duration;
             is_playing = false;
-            update_play_pause();
+            update_player_box();
             return current_position;
         }else if(repeat_type === 'track') {
             play_from(0);
@@ -182,7 +182,7 @@ async function load_wav(file_path) {
         show_message('File loaded!', 1);
         log('track successfully loaded!');
 
-        update_track_info(track_info);
+        update_player_box();
         set_play_time_update();
     } catch (error) {
         logger.error('Failed to load WAV:', error);
@@ -208,7 +208,7 @@ async function load_with_decode(file_path) {
         show_message('File loaded!', 1);
         log('track successfully decoded and loaded!');
 
-        update_track_info(track_info);
+        update_player_box();
         set_play_time_update();
     } catch (error) {
         logger.error('Failed to decode file: ', error);
@@ -243,7 +243,7 @@ export function audio_play_pause() {
         audio_context.suspend();
         is_playing = false;
 
-        update_play_pause();
+        update_player_box();
     } else {
         play_from(current_position);
     }

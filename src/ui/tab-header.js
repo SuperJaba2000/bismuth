@@ -2,7 +2,7 @@ import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options } from '../ui.js';
 import { hide_tab_files, show_tab_files } from './tab-files.js';
-import { hide_player_box, show_player_box } from './player-box.js';
+import { hide_player_box, show_player_box } from './player-box/player-box.js';
 import { hide_tab_welcome, show_tab_welcome } from './tab-welcome.js';
 
 
