@@ -5,6 +5,7 @@ import { is_playing, next_track, play_pause, previous_track } from "../../audio/
 
 export let button_play, button_prev, button_next;
 
+let keys_input_inited = false;
 
 const central_buttons_active = () => true;
 
@@ -44,6 +45,15 @@ export function init_central_buttons() {
     button_play.on('click', () => button_play_click());
     button_prev.on('click', () => button_prev_click());
     button_next.on('click', () => button_next_click());
+
+    if(!keys_input_inited) {
+        screen.key(['space'], () => button_play_click());
+
+        screen.key(['left'], () => button_prev_click());
+        screen.key(['right'], () => button_next_click());
+
+        keys_input_inited = true;
+    }
 
     update_central_buttons();
 }

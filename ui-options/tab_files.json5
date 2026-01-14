@@ -6,13 +6,14 @@
         height: "100%-5",
         style: {
             fg: "gray",
-        }
+        },
+        draggable: true
     },
 
     tab_files_filemanager: {
         top: 1,
         left: 32,
-        width: "100%-33",
+        width: "shrink",
         keys: {},
         vi: false,
         mouse: true,

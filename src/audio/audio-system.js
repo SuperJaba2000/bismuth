@@ -234,7 +234,7 @@ function get_current_position() {
         const elapsed = audio_context.currentTime - playback_start_time;
         const new_position = playback_offset + elapsed;
         
-        // Don't exceed track duration
+        // don't exceed track duration
         if (new_position >= current_track.duration) {
             return current_track.duration;
         }
@@ -255,7 +255,6 @@ export function play_pause() {
     }
 
     if (is_playing) {
-        // Pause playback
         current_position = get_current_position();
         
         try {
