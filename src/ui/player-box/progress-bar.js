@@ -1,7 +1,7 @@
 import blessed from "reblessed";
 import { screen } from "../../index.js";
 import { ui_options } from "../../ui.js";
-import { current_position, track_loaded, track_info, rewind_to } from "../../audio/audio_system.js";
+import { current_position, track_loaded, track_info, rewind_to } from "../../audio/audio-system.js";
 
 export let progress_bar;
 

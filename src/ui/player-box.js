@@ -15,7 +15,7 @@ import { is_playing,
     track_loaded, 
     track_info, 
     audio_change_repeat_type,
-    rewind_to } from '../audio/audio_system.js';
+    rewind_to } from '../audio/audio-system.js';
 
 
 export let progress_bar, 

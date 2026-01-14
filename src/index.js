@@ -1,7 +1,7 @@
 import logger from './logger.js';
 import blessed from 'reblessed';
 import { init_ui, show_message } from './ui.js';
-import { init_audio_system, reset_audio_system } from './audio/audio_system.js';
+import { init_audio_system, reset_audio_system } from './audio/audio-system.js';
 
 // TODO: move to config
 const DEBUG = true;

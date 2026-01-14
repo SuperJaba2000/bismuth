@@ -1,7 +1,7 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options, show_message } from '../ui.js';
-import { load_track } from '../audio/audio_system.js';
+import { load_track } from '../audio/audio-system.js';
 
 export let tab_files_separator, tab_files_filemanager;
 

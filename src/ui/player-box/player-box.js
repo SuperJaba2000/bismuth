@@ -5,7 +5,9 @@ import { init_central_buttons, button_play, button_prev, button_next, update_cen
 import { init_progress_bar, progress_bar, update_progress_bar } from './progress-bar.js';
 import { init_track_info, track_time, track_title, track_artist, update_track_info } from './track-info.js';
 
-export let player_box;
+let player_box;
+
+let player_box_update_interval;
 
 export function init_player_box() {
     init_track_info();
@@ -25,6 +27,8 @@ export function init_player_box() {
     player_box.append(progress_bar);
 
     screen.append(player_box);
+
+    set_update_interval();
 }
 
 export function show_player_box() {
@@ -43,6 +47,15 @@ export function update_player_box() {
     update_progress_bar();
 }
 
-// deprecated
-export function clear_play_time_update() {}
-export function set_play_time_update() {}
+function set_update_interval() {
+    if(player_box_update_interval) 
+        clearInterval(player_box_update_interval);
+
+    player_box_update_interval = setInterval(update_player_box, 100);
+}
+
+// not used
+function clear_update_interval() {
+    if(player_box_update_interval) 
+        clearInterval(player_box_update_interval);
+}
