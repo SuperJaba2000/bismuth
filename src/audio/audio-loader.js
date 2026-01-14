@@ -2,6 +2,7 @@ import logger from "../logger.js";
 import { readFile } from "fs/promises";
 import { audio_context } from "./audio-system.js";
 import { decode } from "./audio-decoder.js";
+import { show_message } from "../ui.js";
 
 function log(message, ...args) {
     logger.info(`[AUDIO LOADER] ${message}`, ...args);
@@ -10,7 +11,7 @@ function log(message, ...args) {
 export async function load_wav(file_path) {
     try {
         const file_buffer = await readFile(file_path);
-        audio_buffer = await audio_context.decodeAudioData(file_buffer.buffer);
+        const audio_buffer = await audio_context.decodeAudioData(file_buffer.buffer);
 
         return audio_buffer;
     } catch (error) {
@@ -29,9 +30,7 @@ export async function load_with_decode(file_path) {
             bit_depth: 16
         });
 
-        audio_buffer = decoded_audio_buffer;
-
-        return audio_buffer;
+        return decoded_audio_buffer;
     } catch (error) {
         logger.error('Failed to decode file: ', error);
         show_message('Failed to decode file!', 1);

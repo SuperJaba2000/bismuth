@@ -28,7 +28,7 @@ export default class Track {
     }
 
     async load() {
-        this.metadata = get_track_metadata(this.path);
+        this.metadata = await get_track_metadata(this.path);
 
         if (this.metadata.ext === '.wav') {
             this.audio_buffer = await load_wav(this.path);

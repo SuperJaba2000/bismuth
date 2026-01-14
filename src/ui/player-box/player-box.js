@@ -5,6 +5,7 @@ import { init_central_buttons, button_play, button_prev, button_next, update_cen
 import { init_progress_bar, progress_bar, update_progress_bar } from './progress-bar.js';
 import { init_track_info, track_time, track_title, track_artist, update_track_info } from './track-info.js';
 import { init_right_buttons, button_repeat_type, update_right_buttons } from './right-buttons.js';
+import { update_current_position } from '../../audio/audio-system.js';
 
 let player_box;
 
@@ -46,6 +47,8 @@ export function hide_player_box() {
 }
 
 export function update_player_box() {
+    update_current_position();
+
     update_track_info();
     update_central_buttons();
     update_right_buttons();

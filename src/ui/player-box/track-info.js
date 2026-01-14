@@ -22,8 +22,8 @@ const _track_duration_content = () => {
 };
 const _track_time_content = () => current_track.loaded ? `${_track_position_content()}|${_track_duration_content()}` : `00:00|00:00`;
 
-const _track_title_content = () => current_track.title;
-const _track_artist_content = () => '- ' + current_track.artist;
+const _track_title_content = () => current_track.title || '-';
+const _track_artist_content = () => '- ' + current_track.artist || '-';
 
 
 export function init_track_info() {

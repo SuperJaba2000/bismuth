@@ -238,6 +238,8 @@ function get_current_position() {
         if (new_position >= current_track.duration) {
             return current_track.duration;
         }
+
+        current_position = new_position;
         
         return new_position;
     } catch (error) {

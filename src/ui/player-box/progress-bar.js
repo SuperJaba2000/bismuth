@@ -25,7 +25,7 @@ function progress_bar_mouse(data) {
 
             const relative_x = data.x - progress_bar.left;
             const percentage = relative_x / _progress_bar_length();
-            const timestamp = percentage * current_track.duration;
+            const timestamp = Math.floor(percentage * current_track.duration);
 
             rewind_to(timestamp);
         }

@@ -19,10 +19,12 @@ export async function get_track_metadata(file_path) {
         logger.error('Failed to get track info using music-metadata! ', err);
     }
 
-    return {
+    const track_metadata = {
         ext: file_ext,
         title: metadata?.common?.title || file_name,
         artist: metadata?.common?.artist || 'Unknown',
         duration: metadata?.format?.duration || null
-    }
+    };
+
+    return track_metadata;
 }
