@@ -6,9 +6,12 @@
     button_play_border_fg: "#ffffaa",
     
     buttons_prev_next_fg: "yellow",
+
+    button_repeat_type_fg: "green",
     
     progress_bar_fg_active: "yellow",
     progress_bar_fg_inactive: "#ffffaa",
+
 
     message_box: {
         top: "50%-3",

@@ -5,6 +5,10 @@ import { StreamAudioContext } from '@descript/web-audio-js';
 import { show_message } from '../ui.js';
 import { update_player_box } from '../ui/player-box/player-box.js';
 
+import Track from '../tracks/Track.js';
+import Playlist from '../tracks/Playlist.js';
+
+
 function log(message, ...args) {
     logger.info(`[AUDIO] ${message}`, ...args);
 }
@@ -12,11 +16,10 @@ function log(message, ...args) {
 
 export let audio_context, source_node, gain_node, speaker;
 
-export let current_playlist;
-export let current_track;
+export let current_track = new Track();
+export let current_playlist = new Playlist();
 
 
-let audio_buffer;
 let playback_start_time = 0;
 let playback_offset = 0;
 
@@ -316,7 +319,6 @@ export function rewind_to(position) {
     log(`Rewound to ${new_position.toFixed(2)}s`);
 }
 
-// Utility function to load and play a track
 export function load_and_play_track(track) {
     if (!track || !track.audio_buffer) {
         log('Invalid track provided to load_and_play_track');
@@ -333,11 +335,10 @@ export function load_and_play_track(track) {
     current_position = 0;
     play_from(0);
     
-    show_message(`Now playing: ${track.title || 'Unknown track'}`, 1);
+    show_message(`Now playing: ${track.title}`, 1);
     update_player_box();
 }
 
-// Function to skip to next track (placeholder for playlist functionality)
 export function next_track() {
     if (!current_playlist || current_playlist.length === 0) {
         show_message('No playlist available', 1);
@@ -345,10 +346,9 @@ export function next_track() {
     }
     
     // TODO: Implement actual playlist navigation
-    log('Next track requested - implement playlist logic');
+    
 }
 
-// Function to skip to previous track
 export function previous_track() {
     if (!current_playlist || current_playlist.length === 0) {
         show_message('No playlist available', 1);
@@ -356,5 +356,5 @@ export function previous_track() {
     }
     
     // TODO: Implement actual playlist navigation
-    log('Previous track requested - implement playlist logic');
+    
 }

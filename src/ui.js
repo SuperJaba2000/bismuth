@@ -59,7 +59,6 @@ export function init_ui() {
     init_tab_header();
     init_player_box();
 
-
     hide_player_box();
 
     hide_tab_files();

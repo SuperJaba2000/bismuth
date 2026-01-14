@@ -19,6 +19,7 @@ const _tab_header_content = () => `switch to tab: ${_tab_display_name()}`;
 
 export function show_active_tab() {
     if (active_tab === 'welcome') {
+        hide_tab_files();
         hide_player_box();
         show_tab_welcome();
     } else if (active_tab === 'files') {
@@ -38,7 +39,7 @@ export function show_active_tab() {
     } else if (active_tab === 'config') {
         hide_tab_welcome();
         hide_tab_files();
-        hide_tab_yandex();
+        //hide_tab_yandex();
 
         //show_tab_config();
         hide_player_box();

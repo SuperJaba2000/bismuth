@@ -30,6 +30,10 @@ export default class Playlist {
         return this._tracks[this.next_position];
     }
 
+    get length() {
+        return this._tracks.length;
+    }
+
     next() {
         this.current_position = this.next_position;
     }

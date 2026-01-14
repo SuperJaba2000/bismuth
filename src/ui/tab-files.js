@@ -1,7 +1,6 @@
 import blessed from 'reblessed';
 import { screen } from '../index.js';
 import { ui_options, show_message } from '../ui.js';
-import { load_track } from '../audio/audio-system.js';
 
 export let tab_files_separator, tab_files_filemanager;
 
@@ -19,7 +18,7 @@ export function init_tab_files() {
 
     tab_files_filemanager.on('file', async (file_path) => {
         show_message('Loading file...', 0);
-        load_track(file_path)
+        //load_track(file_path)
     });
 
     tab_files_filemanager.refresh(process.cwd(), () => {
@@ -32,9 +31,13 @@ export function init_tab_files() {
 export function hide_tab_files() {
     tab_files_separator.hide();
     tab_files_filemanager.hide();
+    screen.render();
 }
 
 export function show_tab_files() {
     tab_files_separator.show();
     tab_files_filemanager.show();
+    tab_files_filemanager.focus();
+    
+    screen.render();
 }

@@ -1,16 +1,16 @@
 import blessed from "reblessed";
 import { screen } from "../../index.js";
 import { ui_options } from "../../ui.js";
-import { current_position, track_loaded, track_info, rewind_to } from "../../audio/audio-system.js";
+import { current_track, current_position, rewind_to } from "../../audio/audio-system.js";
 
 export let progress_bar;
 
 const _progress_bar_length = () => process.stdout.columns - 5;
 const _progress_bar_content = () => {
-    const percentage = track_loaded ? (current_position / track_info.duration) : 0;
+    const percentage = current_track.loaded ? (current_position / current_track.duration) : 0;
     const active_length = Math.floor(percentage * _progress_bar_length());
     const inactive_length = _progress_bar_length() - active_length;
-    return `\n{${ui_options['progress_bar_fg_active']}-fg}${'-'.repeat(active_length)}{/}{${ui_options['progress_bar_fg_inactive']}-fg}${'-'.repeat(inactive_length)}{/}`;
+    return `\n{${ui_options['progress_bar_fg_active']}-fg}${'-'.repeat(active_length)}{${ui_options['progress_bar_fg_inactive']}-fg}${'-'.repeat(inactive_length)}`;
 };
 
 
@@ -25,7 +25,7 @@ function progress_bar_mouse(data) {
 
             const relative_x = data.x - progress_bar.left;
             const percentage = relative_x / _progress_bar_length();
-            const timestamp = percentage * track_info.duration;
+            const timestamp = percentage * current_track.duration;
 
             rewind_to(timestamp);
         }

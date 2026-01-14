@@ -1,7 +1,7 @@
 import blessed from 'reblessed';
 import { screen } from '../../index.js';
 import { ui_options } from '../../ui.js';
-import { current_position, track_info, track_loaded } from '../../audio/audio-system.js';
+import { current_track, current_position } from '../../audio/audio-system.js';
 
 export let track_time, track_title, track_artist;
 
@@ -15,15 +15,15 @@ const _track_position_content = () => {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 };
 const _track_duration_content = () => {
-    const duration = track_info?.duration || 0;
+    const duration = current_track.duration || 0;
     const minutes = Math.floor(duration / 60);
     const seconds = Math.floor(duration % 60);
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 };
-const _track_time_content = () => track_loaded ? `${_track_position_content()}|${_track_duration_content()}` : `00:00|00:00`;
+const _track_time_content = () => current_track.loaded ? `${_track_position_content()}|${_track_duration_content()}` : `00:00|00:00`;
 
-const _track_title_content = () => track_loaded ? track_info.title : 'Track not loaded';
-const _track_artist_content = () => track_loaded ? '- ' + track_info.artist : '';
+const _track_title_content = () => current_track.title;
+const _track_artist_content = () => '- ' + current_track.artist;
 
 
 export function init_track_info() {

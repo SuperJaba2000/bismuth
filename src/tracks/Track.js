@@ -1,5 +1,5 @@
-import { get_track_metadata } from "../audio/audio-metadata";
-import { load_wav, load_with_decode } from "../audio/audio-loader";
+import { get_track_metadata } from "../audio/audio-metadata.js";
+import { load_wav, load_with_decode } from "../audio/audio-loader.js";
 
 export default class Track {
     path;
