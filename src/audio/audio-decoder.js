@@ -1,8 +1,8 @@
 import ffmpeg from 'fluent-ffmpeg';
 import ffmpegPath from './ffmpeg-path.js';
 import { audio_context } from './audio-system.js';
-import { show_message } from '../ui.js';
-import logger from '../logger.js';
+import { show_message } from '../ui/ui.js';
+import logger from '../util/logger.js';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 

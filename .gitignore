@@ -2,8 +2,11 @@
 
 /logs
 /bismuth-logs
+/src/bismuth-logs
 
 /src/filemanager.js
+
+/refactor
 
 /audio
 /dist
@@ -12,3 +15,4 @@
 *.bat
 
 *.exe
+bismuth.exe.ppdb

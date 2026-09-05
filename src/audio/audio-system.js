@@ -1,8 +1,8 @@
-import logger from '../logger.js';
-import { clamp } from '../util.js';
+import logger from '../util/logger.js';
+import { clamp } from '../util/util.js';
 import Speaker from 'speaker';
 import { StreamAudioContext } from '@descript/web-audio-js';
-import { show_message } from '../ui.js';
+import { show_message } from '../ui/ui.js';
 import { update_player_box } from '../ui/player-box/player-box.js';
 
 import Track from '../tracks/Track.js';

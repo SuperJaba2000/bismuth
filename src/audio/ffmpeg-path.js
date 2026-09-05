@@ -2,7 +2,7 @@ import { join } from 'path';
 import { copyFileSync, existsSync, mkdirSync } from 'fs';
 import { tmpdir } from 'os';
 import pathToFfmpeg from 'ffmpeg-static';
-import logger from '../logger.js';
+import logger from '../util/logger.js';
 
 let ffmpegPath = pathToFfmpeg;
 

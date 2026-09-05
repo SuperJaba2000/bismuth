@@ -1,12 +1,9 @@
-import logger from "../logger.js";
+import logger from "../util/logger.js";
 import { readFile } from "fs/promises";
 import { audio_context } from "./audio-system.js";
 import { decode } from "./audio-decoder.js";
-import { show_message } from "../ui.js";
+import { show_message } from "../ui/ui.js";
 
-function log(message, ...args) {
-    logger.info(`[AUDIO LOADER] ${message}`, ...args);
-}
 
 export async function load_wav(file_path) {
     try {

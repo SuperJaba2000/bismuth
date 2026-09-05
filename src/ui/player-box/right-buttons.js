@@ -1,6 +1,6 @@
 import blessed from 'reblessed';
 import { screen } from '../../index.js';
-import { ui_options } from '../../ui.js';
+import { ui_options } from '../ui.js';
 import { repeat_type, change_repeat_type } from '../../audio/audio-system.js';
 
 export let button_repeat_type;

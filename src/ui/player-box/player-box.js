@@ -1,6 +1,6 @@
 import blessed from 'reblessed';
 import { screen } from '../../index.js';
-import { ui_options } from '../../ui.js';
+import { ui_options } from '../ui.js';
 import { init_central_buttons, button_play, button_prev, button_next, update_central_buttons } from './central-buttons.js';
 import { init_progress_bar, progress_bar, update_progress_bar } from './progress-bar.js';
 import { init_track_info, track_time, track_title, track_artist, update_track_info } from './track-info.js';

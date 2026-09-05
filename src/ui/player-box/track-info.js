@@ -1,8 +1,8 @@
 import blessed from 'reblessed';
 import { screen } from '../../index.js';
-import { ui_options } from '../../ui.js';
+import { ui_options } from '../ui.js';
 import { current_track, current_position } from '../../audio/audio-system.js';
-import { get_screen_size } from '../../util.js';
+import { get_screen_size } from '../../util/util.js';
 
 export let track_time, track_title, track_artist;
 

@@ -1,4 +1,4 @@
-import logger from '../logger.js';
+import logger from '../util/logger.js';
 import { basename, extname } from 'path';
 
 let music_metadata = null;
@@ -25,6 +25,12 @@ export async function get_track_metadata(file_path) {
         artist: metadata?.common?.artist || 'Unknown',
         duration: metadata?.format?.duration || null
     };
+
+    if(track_metadata.artist == 'Unknown' && track_metadata.title.includes(' - ')) {
+        const [artist, title] = track_metadata.title.replace(/\[.*?\]/g, '').split(' - ', 2);
+        track_metadata.artist = artist;
+        track_metadata.title = title;
+    }
 
     return track_metadata;
 }

@@ -1,6 +1,6 @@
 import blessed from "reblessed";
 import { screen } from "../../index.js";
-import { ui_options } from "../../ui.js";
+import { ui_options } from "../ui.js";
 import { is_playing, next_track, play_pause, previous_track } from "../../audio/audio-system.js";
 
 export let button_play, button_prev, button_next;
