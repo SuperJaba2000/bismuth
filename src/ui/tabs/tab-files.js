@@ -75,7 +75,9 @@ export function init_tab_files() {
     });
 
     tab_files_filemanager.refresh(process.cwd(), () => {
-        tab_files_filemanager.focus();
+        if(active_tab === 'files') {
+            tab_files_filemanager.focus();
+        }
     });
 
     screen.append(tab_files_playlist);

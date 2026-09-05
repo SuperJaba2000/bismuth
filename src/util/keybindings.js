@@ -5,9 +5,9 @@ export function init_important_keybindings() {
 }
 
 export function init_keybindings() {
-    
-
-
+    screen.key(['s'], () => {
+        
+    });
 }
 
 

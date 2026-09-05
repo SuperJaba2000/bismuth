@@ -27,7 +27,7 @@ export async function get_track_metadata(file_path) {
     };
 
     if(track_metadata.artist == 'Unknown' && track_metadata.title.includes(' - ')) {
-        const [artist, title] = track_metadata.title.replace(/\[.*?\]/g, '').split(' - ', 2);
+        const [artist, title] = track_metadata.title.replace(/\[.*?\]/g, '').trim().split(' - ', 2);
         track_metadata.artist = artist;
         track_metadata.title = title;
     }
