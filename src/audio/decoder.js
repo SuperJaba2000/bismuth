@@ -1,7 +1,6 @@
 import ffmpeg from 'fluent-ffmpeg';
 import ffmpegPath from './ffmpeg-path.js';
-import { audio_context } from './audio-system.js';
-import { show_message } from '../ui/ui.js';
+import { audioContext } from './audio-system.js';
 import logger from '../util/logger.js';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -11,8 +10,8 @@ const CODEC = 'pcm_s16le';
 const FORMAT = 's16le';
 
 
-export async function decode(file_path, options) {
-    show_message('Decoding file...', 0);
+export async function decode(path, options) {
+    //show_message('Decoding file...', 0);
 
     const chunks = [];
 
@@ -23,7 +22,7 @@ export async function decode(file_path, options) {
     const bytes_per_sample = bit_depth / 8;
 
     return new Promise((resolve, reject) => {
-        ffmpeg(file_path)
+        ffmpeg(path)
             .audioCodec(CODEC)
             .audioFrequency(freq)
             .audioChannels(channels)
@@ -39,14 +38,14 @@ export async function decode(file_path, options) {
 
                 const num_samples = pcm_data.length / (channels * bytes_per_sample);
 
-                const decoded_audio_buffer = audio_context.createBuffer(
+                const audioBuffer = audioContext.createBuffer(
                     channels,
                     num_samples,
                     freq
                 );
 
                 for (let channel = 0; channel < channels; channel++) {
-                    const channelData = decoded_audio_buffer.getChannelData(channel);
+                    const channelData = audioBuffer.getChannelData(channel);
                     const dataView = new DataView(pcm_data.buffer);
 
                     for (let i = 0; i < num_samples; i++) {
@@ -56,7 +55,7 @@ export async function decode(file_path, options) {
                     }
                 }
 
-                resolve(decoded_audio_buffer);
+                resolve(audioBuffer);
             });
     })
 

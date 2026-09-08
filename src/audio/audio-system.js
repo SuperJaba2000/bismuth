@@ -14,7 +14,7 @@ function log(message, ...args) {
 }
 
 
-export let audio_context, source_node, gain_node, speaker;
+export let audioContext, source_node, gain_node, speaker;
 
 export let current_track = new Track();
 export let current_playlist = new Playlist();
@@ -50,9 +50,9 @@ export function change_repeat_type() {
 // simplified initialization (for the first time only)
 export function init_audio_system() {
     try{
-        audio_context = new StreamAudioContext();
-        gain_node = audio_context.createGain();
-        gain_node.connect(audio_context.destination);
+        audioContext = new StreamAudioContext();
+        gain_node = audioContext.createGain();
+        gain_node.connect(audioContext.destination);
         set_volume(volume);
     } catch(error) {
         show_message('Failed to initialize audio context!', 1);
@@ -78,9 +78,9 @@ export function reset_audio_system() {
     }
 
     // Clean up audio context
-    if (audio_context && audio_context.state !== 'closed') {
+    if (audioContext && audioContext.state !== 'closed') {
         try {
-            audio_context.close().catch(() => {});
+            audioContext.close().catch(() => {});
         } catch (e) {
             log('Error closing audio context:', e);
         }
@@ -88,9 +88,9 @@ export function reset_audio_system() {
     
     // Reinitialize audio context
     try {
-        audio_context = new StreamAudioContext();
-        gain_node = audio_context.createGain();
-        gain_node.connect(audio_context.destination);
+        audioContext = new StreamAudioContext();
+        gain_node = audioContext.createGain();
+        gain_node.connect(audioContext.destination);
         set_volume(volume); // Restore previous volume
     } catch (error) {
         log('Failed to recreate audio context:', error);
@@ -138,7 +138,7 @@ function create_speaker() {
             bitDepth: 16, // Standard for PCM output
         });
 
-        audio_context.pipe(speaker);
+        audioContext.pipe(speaker);
         log(`Speaker created: ${channels}ch, ${sampleRate}Hz`);
     } catch (error) {
         log('Failed to create speaker:', error);
@@ -166,7 +166,7 @@ function handle_track_end() {
     if (is_playing) {
         current_position = current_track.duration;
         try {
-            audio_context.suspend();
+            audioContext.suspend();
         } catch (e) {
             log('Error suspending audio context:', e);
         }
@@ -192,7 +192,7 @@ function play_from(position) {
 
     // Create new source node
     try {
-        source_node = audio_context.createBufferSource();
+        source_node = audioContext.createBufferSource();
         source_node.buffer = current_track.audio_buffer;
         source_node.connect(gain_node);
         
@@ -202,15 +202,15 @@ function play_from(position) {
         };
 
         // Set playback timing
-        playback_start_time = audio_context.currentTime;
+        playback_start_time = audioContext.currentTime;
         playback_offset = position;
 
         // Start playback
         source_node.start(0, position);
 
         // Resume context if suspended
-        if (audio_context.state === 'suspended') {
-            audio_context.resume();
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
         }
 
         is_playing = true;
@@ -231,7 +231,7 @@ function get_current_position() {
     }
 
     try {
-        const elapsed = audio_context.currentTime - playback_start_time;
+        const elapsed = audioContext.currentTime - playback_start_time;
         const new_position = playback_offset + elapsed;
         
         // don't exceed track duration
@@ -262,7 +262,7 @@ export function play_pause() {
                 source_node.onended = null;
                 source_node.stop();
             }
-            audio_context.suspend();
+            audioContext.suspend();
         } catch (e) {
             log('Error pausing playback:', e);
         }

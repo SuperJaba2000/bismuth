@@ -8,7 +8,7 @@ import { screen } from '../index.js';
 import { hide_player_box, init_player_box } from './player-box/player-box.js';
 import { show_active_tab, init_tab_header, tab_header, show_tab_header } from './tabs/tab-header.js';
 import { hide_tab_files, init_tab_files } from './tabs/tab-files.js';
-import { init_tab_welcome } from './tabs/tab-welcome.js';
+//import { init_tab_welcome } from './tabs/tab-welcome.js';
 
 
 export let ui_options = {};

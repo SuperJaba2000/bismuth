@@ -1,5 +1,5 @@
 {
-    tab_welcome_logo: {
+    "tab0-logo-box": {
         top: 2,
         left: 0,
         width: "100%",
@@ -10,7 +10,7 @@
         }
     },
 
-    tab_welcome_separator: {
+    "tab0-separator": {
         // change top depending on logo height
         left: 3,
         width: "100%-6",
@@ -21,7 +21,7 @@
         }
     },
 
-    tab_welcome_hotkeys: {
+    "tab0-hotkeys-box": {
         // change top depending on logo height
         left: 6,
         width: "100%-11",

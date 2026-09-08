@@ -1,19 +1,19 @@
 {
-    fg_color_inactive: "#999999",
+    "fg-color-inactive": "#999999",
 
     // TODO : move to another file
-    button_play_main_fg: "yellow",
-    button_play_border_fg: "#ffffaa",
+    "button-play-main-fg": "yellow",
+    "button-play-border-fg": "#ffffaa",
     
-    buttons_prev_next_fg: "yellow",
+    "buttons-prev-next-fg": "yellow",
 
-    button_repeat_type_fg: "green",
+    "button-repeat-type-fg": "green",
     
-    progress_bar_fg_active: "yellow",
-    progress_bar_fg_inactive: "#ffffaa",
+    "progress-bar-fg-active": "yellow",
+    "progress-bar-fg-inactive": "#ffffaa",
 
 
-    message_box: {
+    "message-box": {
         top: "50%-3",
         left: "50%-13",
         width: 26,
@@ -35,7 +35,7 @@
         }
     },
 
-    background_box: {
+    "background-box": {
         top: 0,
         left: 0,
         width: "100%",

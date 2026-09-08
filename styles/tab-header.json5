@@ -1,5 +1,5 @@
 {
-    tab_header: {
+    "tab-header": {
         top: -3,
         left: "50%-13",
         width: 25,

@@ -1,5 +1,5 @@
 {
-    tab_files_playlist_header: {
+    "tab1-playlist-header": {
         top: 1,
         left: 1,
         width: 20,
@@ -13,7 +13,7 @@
         }
     },
 
-    tab_files_playlist: {
+    "tab1-playlist": {
         top: 4,
         left: 1,
         width: 20,
@@ -34,7 +34,7 @@
         }
     },
 
-    tab_files_separator: {
+    "tab1-separator": {
         orientation : "vertical",
         top: 1,
         left: 30,
@@ -45,7 +45,7 @@
         draggable: true
     },
 
-    tab_files_filemanager: {
+    "tab1-filemanager": {
         top: 1,
         left: 32,
         width: "shrink",

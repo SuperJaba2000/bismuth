@@ -1,13 +1,17 @@
-import { screen } from "../index.js";
+import { screen, ui } from "../index.js";
 
-export function init_important_keybindings() {
+export function initImportantKeybindings() {
     screen.key(['C-c'], () => process.exit(0));
 }
 
-export function init_keybindings() {
-    screen.key(['s'], () => {
+export function initKeybindings() {
+    // screen.key(['s'], () => {
         
-    });
+    // });
+
+    screen.key(['tab'], () => {
+        ui.nextTab();
+    })
 }
 
 
