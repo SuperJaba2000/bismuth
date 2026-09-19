@@ -4,6 +4,7 @@ import winston from 'winston';
 import { tmpdir } from 'os';
 
 const FORCE_CONSOLE_LOGS = process.env.FORCE_CONSOLE_LOGS === 'true' || false;
+const SEPARATE_LOGS = process.env.SEPARATE_LOGS === 'true' || false;
 
 const getLogsDir = () => {
     try {
@@ -47,18 +48,19 @@ const getLogsDir = () => {
 
 const logs_dir = getLogsDir();
 const base_log_file_name = path.join(logs_dir, 'bismuth');
-
+const exception_log_file_name = SEPARATE_LOGS ? path.join(logs_dir, 'bismuth-exceptions') : base_log_file_name;
+const rejection_log_file_name = SEPARATE_LOGS ? path.join(logs_dir, 'bismuth-rejections') : base_log_file_name;
 
 let logger;
 
 try {
     logger = winston.createLogger({
-        level: "info",
+        level: "debug",
 
         format: winston.format.combine(
             winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
             winston.format.printf(({ timestamp, level, message }) => {
-                return `[${timestamp}] [${level.toUpperCase()}]: ${message}`;
+                return `[${timestamp}] ${`[${level.toUpperCase()}]:`.padEnd(8)} ${message}`;
             })
         ),
 
@@ -82,29 +84,32 @@ try {
         });
         
         logger.add(fileTransport);
+
+        logger.exceptions.handle(fileTransport);
+        logger.rejections.handle(fileTransport);
         
         // errors and rejections handlers
-        logger.exceptions.handle(
-            new winston.transports.File({ filename: base_log_file_name + '-exceptions.log' })
-        );
+        // logger.exceptions.handle(
+        //     SEPARATE_LOGS ? new winston.transports.File({ filename: exception_log_file_name + '.log' }) : fileTransport
+        // );
         
-        logger.rejections.handle(
-            new winston.transports.File({ filename: base_log_file_name + '-rejections.log' })
-        );
+        // logger.rejections.handle(
+        //     SEPARATE_LOGS ? new winston.transports.File({ filename: rejection_log_file_name + '.log' }) : fileTransport
+        // );
         
     } catch (fileError) {
         logger.warn(`Error adding file transport: ${fileError.message}`);
     }
     
-    logger.info('-------------------------------------')
+    logger.info('-------------------------------------\n');
     logger.info('Logger initialized');
     
 } catch (error) {
-    // Fallback: простой console логгер
+    // Fallback: simple console logger
     console.error('Error initializing logger: ', error);
 
     logger = {
-        info: (msg) => console.log(`[INFO]: ${msg}`),
+        info: (msg) => $console.log(`[INFO]: ${msg}`),
         error: (msg) => console.error(`[ERROR]: ${msg}`),
         warn: (msg) => console.warn(`[WARN]: ${msg}`),
         debug: (msg) => console.debug(`[DEBUG]: ${msg}`)

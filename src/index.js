@@ -1,10 +1,9 @@
 import logger from './util/logger.js';
 import blessed from 'reblessed';
-//import { init_audio_system } from './audio/audio-system.js';
 import { initImportantKeybindings, initKeybindings } from './util/keybindings.js';
 import UIManager from './ui/UIManager.js';
+import AudioSystem from './audio/AudioSystem.js';
 
-// TODO: move to config
 const DEBUG = true;
 
 
@@ -16,17 +15,17 @@ export const screen = blessed.screen({
 });
 
 export const ui = new UIManager(screen);
+export const as = new AudioSystem();
 
-initImportantKeybindings();
+initImportantKeybindings(screen);
 
 function init() {
     logger.info('starting the main initialization...');
 
     process.title = 'Bismuth Player';
 
-    // init_audio_system();
     ui.init();
-    ui.showActive();
+    ui.appendToScreen();
 
     initKeybindings();
 

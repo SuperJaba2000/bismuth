@@ -1,4 +1,4 @@
-import UITab from "../UITab.js";
+import UITab from "./UITab.js";
 
 export default class ConfigTab extends UITab {
     name = 'config';

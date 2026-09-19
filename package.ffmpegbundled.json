@@ -1,0 +1,15 @@
+{
+  "name": "bismuth-ffmpegbundled",
+  "version": "0.1.0",
+  "bin": "dist/bundled/bundle.cjs",
+  "pkg": {
+    "scripts": [
+      "dist/bundled/bundle.cjs"
+    ],
+    "assets": [
+      "themes/**/*",
+      "node_modules/reblessed/dist/lib/widgets/*.js",
+      "node_modules/ffmpeg-static/ffmpeg.exe"
+    ]
+  }
+}

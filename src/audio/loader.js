@@ -3,7 +3,6 @@ import { readFile } from "fs/promises";
 import { audioContext } from "./audio-system.js";
 import { decode } from "./decoder.js";
 
-
 export async function loadWav(path) {
     try {
         const fileBuffer = await readFile(path);

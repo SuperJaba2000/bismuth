@@ -1,11 +1,7 @@
-import { get_track_metadata } from "../audio/audio-metadata.js";
-import { load_wav, load_with_decode } from "../audio/audio-loader.js";
-
-export default class Track {
-    path;
-
+export default class Track{
+    path = null;
     metadata = {};
-    audio_buffer = null;
+    audioBuffer = null;
 
     constructor(path) {
         this.path = path;
@@ -28,12 +24,6 @@ export default class Track {
     }
 
     async load() {
-        this.metadata = await get_track_metadata(this.path);
-
-        if (this.metadata.ext === '.wav') {
-            this.audio_buffer = await load_wav(this.path);
-        } else {
-            this.audio_buffer = await load_with_decode(this.path);
-        }
+        // ...
     }
 }

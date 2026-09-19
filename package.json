@@ -6,33 +6,30 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "prebuild": "webpack --mode production",
-    "build": "pkg . -t node16-windows-x64"
+    "build:system": "cross-env BUILD_TYPE=system webpack --mode production",
+    "build:bundled": "cross-env BUILD_TYPE=bundled webpack --mode production",
+    "pkg:system": "pkg --config package.system.json -t node16-win-x64 --output dist/system/bismuth.exe",
+    "pkg:bundled": "pkg --config package.bundled.json -t node16-win-x64 --output dist/bundled/bismuth.exe",
+    "build:all": "npm run build:system && npm run pkg:system && npm run build:bundled && npm run pkg:bundled"
   },
   "bin": "dist/bundle.cjs",
-  "pkg": {
-    "scripts": "dist/bundle.cjs",
-    "assets": [
-      "ui-options/**/*",
-      "node_modules/reblessed/dist/lib/widgets/*.js",
-      "node_modules/**/*"
-    ]
-  },
   "dependencies": {
     "@descript/web-audio-js": "^0.15.3-patched.6",
     "audio-decode": "^2.2.3",
     "ffmpeg-static": "^5.3.0",
+    "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.3",
     "json5": "^2.2.3",
-    "music-metadata": "^11.10.5",
     "reblessed": "^0.2.1",
     "speaker": "^0.5.5",
-    "winston": "^3.19.0"
+    "winston": "^3.19.0",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
     "babel-loader": "^10.0.0",
+    "cross-env": "^10.1.0",
     "webpack": "^5.104.1",
     "webpack-cli": "^6.0.1",
     "webpack-node-externals": "^3.0.0"

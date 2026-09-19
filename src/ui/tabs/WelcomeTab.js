@@ -1,6 +1,6 @@
 import colors from '../../util/colors.js';
 import blessed from 'reblessed';
-import UITab from '../UITab.js';
+import UITab from './UITab.js';
 
 const LOGO = `
 $$$$$$$\\  $$\\                                     $$\\     $$\\       
@@ -21,9 +21,7 @@ const palette = [colors.fg.blue, colors.fg.white];
 
 export default class WelcomeTab extends UITab {
     logoContent = '';
-
     name = 'welcome';
-    elements = {};
 
     generateLogo() {
         this.logoContent = '';
@@ -42,21 +40,21 @@ export default class WelcomeTab extends UITab {
     init(styles) {
         this.generateLogo();
 
-        this.elements['logo-box'] = blessed.box({
+        this.addChild('logo-box', blessed.box({
             ...styles['tab0-logo-box'],
             content: this.logoContent
-        });
+        }));
 
-        this.elements['separator'] = blessed.box({
+        this.addChild('separator', blessed.box({
             ...styles['tab0-separator'],
             top: styles['tab0-logo-box'].top + LOGO_HEIGTH,
             content: '~'.repeat(LOGO_WIDTH + 6)
-        });
+        }));
 
-        this.elements['hotkeys-box'] = blessed.box({
+        this.addChild('hotkeys-box', blessed.box({
             ...styles['tab0-hotkeys-box'],
             top: styles['tab0-logo-box'].top + LOGO_HEIGTH + 2,
             height: "100%-" + `${(styles['tab0-logo-box'].top + LOGO_HEIGTH + 4)}`,
-        });
+        }));
     }
 }
