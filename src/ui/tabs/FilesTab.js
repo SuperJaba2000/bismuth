@@ -18,6 +18,8 @@ export default class FilesTab extends UITab {
     separatorActive = false;
 
     init(styles) { 
+        super.init();
+
         logger.debug('[FilesTab] Initializing...');
 
         const separator = blessed.line(styles['tab1-separator']);
@@ -38,7 +40,7 @@ export default class FilesTab extends UITab {
         });
 
         fileManager.refresh(process.cwd(), () => {
-            if(this.active) {
+            if(this.isActive) {
                 fileManager.focus();
             }
         });
@@ -56,7 +58,7 @@ export default class FilesTab extends UITab {
 
         // TODO get colors from styles
         screen.on('mouse', e => {
-            if(!this.active) return;
+            if(!this.isActive) return;
 
             const s = this.children['separator'];
             const eventOnSeparator = (e.x === s.aleft && (e.y >= s.top && e.y < s.top + s.height));
@@ -98,5 +100,10 @@ export default class FilesTab extends UITab {
 
     prerender() {
         this.resize();
+    }
+
+    show() {
+        super.show();
+        this.children['filemanager'].focus();
     }
 }

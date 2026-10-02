@@ -5,6 +5,6 @@ export default class ConfigTab extends UITab {
     elements = {};
 
     init(styles) {
-        
+        super.init();
     }
 }

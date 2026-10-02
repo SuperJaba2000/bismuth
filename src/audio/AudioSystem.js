@@ -2,9 +2,7 @@ import logger from '../util/logger.js';
 import { EventEmitter } from 'node:events';
 import { StreamAudioContext } from '@descript/web-audio-js';
 import Speaker from 'speaker';
-
-import Track from '../tracks/Track.js';
-import Playlist from '../tracks/Playlist.js';
+import { state, fire } from '../app.js';
 
 export default class AudioSystem extends EventEmitter {
     context = null;
@@ -12,55 +10,38 @@ export default class AudioSystem extends EventEmitter {
     gainNode = null;
     speaker = null;
 
-    // context (sourceNode -> gainNode) ->
-    // -> speaker (destination)
-
-    currentTrack = new Track();
-    currentPlaylist = new Playlist();
-
-    playbackStartTime = 0;
-    playbackOffset = 0;
-
-    isPlaying = false;
-
-    // In seconds, not position in playlist.
-    currentPosition = 0;
-
-    // Between 0 and 1.0.
-    volume = 0.5;
-
-    // none, playlist, track
-    repeatType = 'none';
-
-
-    log(message, ...args) {
-        logger.info(`[AUDIO] ${message}`, ...args);
-    }
-
+    get currentTrack() { return state.get("current-track"); }
+    get currentPlaylist() { return state.get("current-playlist"); }
 
     changeRepeatType() {
-        if (this.repeatType === 'none') {
-            this.repeatType = 'playlist';
-        } else if (this.repeatType === 'playlist') {
-            this.repeatType = 'track';
-        } else if (this.repeatType === 'track') {
-            this.repeatType = 'none';
+        switch (state.get('repeat-type')) {
+            case 'none':
+                state.set('repeat-type', 'playlist');
+                break;
+
+            case 'playlist':
+                state.set('repeat-type', 'track');
+                break;
+
+            case 'track':
+                state.set('repeat-type', 'none');
+                break;
         }
-
-        this.emit('repeat-type-changed', this.repeatType);
     }
-
 
     init() {
         try {
+            logger.info('started AudioSystem.init()')
+
             this.context = new StreamAudioContext();
 
             this.gainNode = this.context.createGain();
             this.gainNode.connect(this.context.destination);
 
-            this.setVolume(this.volume);
+            this.updateVolume();
+            state.on("change:volume", () => this.updateVolume());
 
-            this.emit('initialized');
+            loffer.info('AudioSystem.init() finished');
         } catch (error) {
             this.log('Failed to initialize audio system:', error);
             throw error;
@@ -75,7 +56,7 @@ export default class AudioSystem extends EventEmitter {
                 this.sourceNode.onended = null;
                 this.sourceNode.stop();
             } catch (error) {
-                // Source may already be stopped.
+                logger.error('Error stopping sourceNode:', error);
             }
 
             this.sourceNode = null;
@@ -86,7 +67,7 @@ export default class AudioSystem extends EventEmitter {
             try {
                 this.speaker.end();
             } catch (error) {
-                this.log('Error ending speaker:', error);
+                logger.error('Error ending speaker:', error);
             }
 
             this.speaker = null;
@@ -98,9 +79,9 @@ export default class AudioSystem extends EventEmitter {
             this.context.state !== 'closed'
         ) {
             try {
-                this.context.close().catch(() => {});
+                this.context.close().catch(() => { });
             } catch (error) {
-                this.log('Error closing audio context:', error);
+                logger.error('Error closing audio context:', error);
             }
         }
 
@@ -117,20 +98,16 @@ export default class AudioSystem extends EventEmitter {
             throw error;
         }
 
-        this.isPlaying = false;
+        state.set('playback-state', 'paused');
+        state.set('current-position', 0);
         this.playbackStartTime = 0;
         this.playbackOffset = 0;
-        this.currentPosition = 0;
-
-        this.emit('reset');
     }
 
 
     createSpeaker() {
-        if (!this.currentTrack?.audio_buffer) {
-            this.log(
-                'Cannot create speaker: no audio buffer available'
-            );
+        if (!this.currentTrack?.audioBuffer) {
+            logger.error('Cannot create speaker: no audio buffer available');
             return;
         }
 
@@ -145,11 +122,8 @@ export default class AudioSystem extends EventEmitter {
             this.speaker = null;
         }
 
-        const channels =
-            this.currentTrack.audio_buffer.numberOfChannels || 2;
-
-        const sampleRate =
-            this.currentTrack.audio_buffer.sampleRate || 44100;
+        const channels = this.currentTrack.audioBuffer.numberOfChannels || 2;
+        const sampleRate = this.currentTrack.audioBuffer.sampleRate || 44100;
 
         try {
             this.speaker = new Speaker({
@@ -160,33 +134,31 @@ export default class AudioSystem extends EventEmitter {
 
             this.context.pipe(this.speaker);
 
-            this.log(
-                `Speaker created: ${channels}ch, ${sampleRate}Hz`
-            );
+            logger.debug(`Speaker created: ${channels}ch, ${sampleRate}Hz`);
         } catch (error) {
-            this.log('Failed to create speaker:', error);
+            logger.error('Failed to create speaker:', error);
             throw error;
         }
     }
 
 
-    setVolume(volume) {
-        this.volume = Math.max(
-            0,
-            Math.min(1, volume)
-        );
-
-        if (this.gainNode) {
-            this.gainNode.gain.value = this.volume;
+    updateVolume() {
+        const clampedVolume = Math.max(0, Math.min(1, state.get('volume')));
+        if (state.get('volume') != clampedVolume) {
+            return state.set('volume', clampedVolume);
         }
 
-        this.emit('volume-changed', this.volume);
+        if (this.gainNode) {
+            this.gainNode.gain.value = clampedVolume;
+        }
     }
 
-        handleTrackEnd() {
+    handleTrackEnd() {
         if (!this.currentTrack?.loaded) {
             return;
         }
+
+        fire('track-ended');
 
         if (this.repeatType === 'track') {
             this.rewindTo(0);
@@ -198,27 +170,20 @@ export default class AudioSystem extends EventEmitter {
             this.currentPlaylist
         ) {
             // TODO: Implement playlist navigation.
-            this.log(
-                'Playlist repeat enabled - implement next track logic'
-            );
+            logger.info('Playlist repeat enabled, but playlist navgation logic isnt implemented');
             return;
         }
 
-        if (this.isPlaying) {
-            this.currentPosition = this.currentTrack.duration;
+        if (state.get('playback-state') == 'playing') {
+            state.set('current-position', state.get('current-track').duration);
 
             try {
                 this.context.suspend();
             } catch (error) {
-                this.log(
-                    'Error suspending audio context:',
-                    error
-                );
+                logger.error('Error suspending audio context:', error);
             }
 
-            this.isPlaying = false;
-
-            this.emit('ended');
+            state.set('playback-state', 'paused');
         }
     }
 
@@ -226,16 +191,14 @@ export default class AudioSystem extends EventEmitter {
     playFrom(position) {
         if (
             !this.currentTrack?.loaded ||
-            !this.currentTrack.audio_buffer
+            !this.currentTrack.audioBuffer
         ) {
-            this.log(
-                'Cannot play: no track loaded or invalid audio buffer'
-            );
+            logger.error('Cannot play: no track loaded or invalid audio buffer');
             return;
         }
 
         if (!this.context || !this.gainNode) {
-            this.log('Cannot play: audio system is not initialized');
+            logger.error('Cannot play: audio system is not initialized');
             return;
         }
 
@@ -252,20 +215,14 @@ export default class AudioSystem extends EventEmitter {
         }
 
         try {
-            this.sourceNode =
-                this.context.createBufferSource();
-
-            this.sourceNode.buffer =
-                this.currentTrack.audio_buffer;
-
+            this.sourceNode = this.context.createBufferSource();
+            this.sourceNode.buffer = state.get('current-track').audioBuffer;
             this.sourceNode.connect(this.gainNode);
-
             this.sourceNode.onended = () => {
                 this.handleTrackEnd();
             };
 
-            this.playbackStartTime =
-                this.context.currentTime;
+            this.playbackStartTime = this.context.currentTime;
 
             this.playbackOffset = position;
 
@@ -278,20 +235,13 @@ export default class AudioSystem extends EventEmitter {
             this.isPlaying = true;
             this.currentPosition = position;
 
-            this.log(
-                `Playback started at ${position.toFixed(2)}s`
-            );
+            logger.debug(`Playback started at ${position.toFixed(2)}s`);
 
-            this.emit('play', {
-                track: this.currentTrack,
-                position,
-            });
+            // fire(...)
         } catch (error) {
-            this.log('Error starting playback:', error);
+            logger.error('Error starting playback:', error);
 
-            this.isPlaying = false;
-
-            this.emit('error', error);
+            state.set('playback-state', 'paused');
         }
     }
 
@@ -442,7 +392,7 @@ export default class AudioSystem extends EventEmitter {
 
 
     loadAndPlayTrack(track) {
-        if (!track || !track.audio_buffer) {
+        if (!track || !track.audioBuffer) {
             this.log(
                 'Invalid track provided to loadAndPlayTrack'
             );

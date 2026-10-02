@@ -1,25 +1,20 @@
-import logger from '../util/logger.js';
 import blessed from 'reblessed';
+import logger from '../util/logger.js';
+import { screen } from '../app.js';
 import MessageBox from './elements/MessageBox.js';
 import PlayerBox from './elements/PlayerBox.js';
 import ThemeManager from './ThemeManager.js';
 import TabManager from './TabManager.js';
 
 export default class UIManager{
-    screen;
     themeManager;
     tabManager;
-
-    root;
-
     playerBox;
     messageBox;
 
     currentStyles = {};
 
-    constructor(screen) {
-        this.screen = screen;
-
+    constructor() {
         this.messageBox = new MessageBox();
         this.playerBox = new PlayerBox();
 
@@ -33,6 +28,8 @@ export default class UIManager{
 
     init() {
         logger.info('[UI] initializing ui...');
+
+        process.title = 'Bismuth Player';
 
         this.themeManager.load();
         this.currentStyles = this.themeManager.getStyles();
@@ -51,11 +48,11 @@ export default class UIManager{
     }
 
     appendToScreen() {
-        this.playerBox.appendTo(this.screen);
-        this.messageBox.appendTo(this.screen);
-        this.tabManager.appendTo(this.screen);
+        this.playerBox.appendTo(screen);
+        this.messageBox.appendTo(screen);
+        this.tabManager.appendTo(screen);
 
-        this.tabManager.showActive();
+        this.tabManager.update();
         this.playerBox.update();
     }
 
@@ -65,6 +62,6 @@ export default class UIManager{
         this.tabManager.prerender();
         this.playerBox.prerender();
 
-        this.screen.render();
+        screen.render();
     }
 }

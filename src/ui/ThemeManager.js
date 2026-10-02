@@ -3,13 +3,13 @@ import YAML from 'yaml';
 import { join, extname, basename } from 'path';
 import { readdirSync, readFileSync, existsSync, mkdirSync } from 'node:fs';
 import logger from '../util/logger.js';
+import { state } from '../app.js';
 
 // TODO move to config
 const THEME_DIR = './themes';
 
 export default class ThemeManager {
     themes = {};
-    currentTheme = 'old';
 
     load() {
         if (!existsSync(THEME_DIR)) {
@@ -20,7 +20,7 @@ export default class ThemeManager {
         const dirContent = readdirSync(THEME_DIR, { withFileTypes: true });
         const themePaths = dirContent.filter(entry => entry.isDirectory()).map(entry => entry.name);
 
-        for(const themePath of themePaths) {
+        for (const themePath of themePaths) {
             this.loadTheme(join(THEME_DIR, themePath));
         }
     }
@@ -33,20 +33,20 @@ export default class ThemeManager {
         const configFiles = files.filter(file => file.endsWith('.yaml') || file.endsWith('.yml') || file.endsWith('.json5'))
             .map(file => join(themePath, file));
 
-        for(const filePath of configFiles) {
+        for (const filePath of configFiles) {
             try {
                 const fileContent = readFileSync(filePath, 'utf8');
                 const fileExtension = extname(filePath);
 
                 let data = {};
 
-                if(['.yaml', '.yml'].includes(fileExtension)){
+                if (['.yaml', '.yml'].includes(fileExtension)) {
                     data = YAML.parse(fileContent);
                 } else {
                     data = json5.parse(fileContent);
                 }
 
-                if(basename(filePath, fileExtension) == 'theme') {
+                if (basename(filePath, fileExtension) == 'theme') {
                     themeName = data.theme.name || 'unnamed-theme';
 
                     // themeName = data.name;
@@ -68,6 +68,6 @@ export default class ThemeManager {
     }
 
     getStyles() {
-        return this.themes[this.currentTheme];
+        return this.themes[state.get("current-theme")];
     }
 }

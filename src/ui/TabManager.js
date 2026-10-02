@@ -1,5 +1,6 @@
-import logger from '../util/logger.js';
 import { EventEmitter } from 'node:events';
+import logger from '../util/logger.js';
+import { state } from '../app.js';
 import WelcomeTab from './tabs/WelcomeTab.js';
 import FilesTab from './tabs/FilesTab.js';
 import ConfigTab from './tabs/ConfigTab.js';
@@ -7,8 +8,6 @@ import TabHeader from './elements/TabHeader.js';
 
 export default class TabManager extends EventEmitter {
     tabs = [];
-    // for debug
-    activeTab = 1;
 
     tabHeader;
 
@@ -21,6 +20,17 @@ export default class TabManager extends EventEmitter {
         ];
         
         this.tabHeader = new TabHeader();
+    }
+
+    get activeTabIndex() {
+        for(let i = 0; i < this.tabs.length; i++) {
+            if(this.tabs[i].name == state.get("active-tab"))
+                return i;
+        }
+    }
+
+    get activeTab() {
+        return this.tabs[this.activeTabIndex];
     }
 
     init(styles) {
@@ -45,27 +55,22 @@ export default class TabManager extends EventEmitter {
         this.tabHeader.appendTo(parent);
     }
 
-    showActive() {
-        for (let i = 0; i < this.tabs.length; i++) {
-            const tab = this.tabs[i];
-            tab.setActive(i == this.activeTab);
+    nextTab() {
+        let newTabIndex = (this.activeTabIndex + 1) % this.tabs.length;
+
+        if(newTabIndex == 0){
+            newTabIndex = 1;
         }
 
-        // TODO rerender only if activeTab was changed
-        this.emit('needs-rerender');
+        const newTab = this.tabs[newTabIndex];
+
+        state.set("active-tab", newTab.name);
+
+        this.tabHeader.changeTab(newTab);
     }
 
-    nextTab() {
-        this.activeTab += 1;
-
-        if(this.activeTab >= this.tabs.length) {
-            this.activeTab = 1;
-        }
-
-        const newTab = this.tabs[this.activeTab];
-
-        this.showActive();
-        this.tabHeader.changeTab(newTab);
+    update() {
+        this.activeTab.show();
     }
 
     prerender() {

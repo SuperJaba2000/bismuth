@@ -10,7 +10,7 @@ if (!['bundled', 'system'].includes(ffmpegBuildType)) {
 
 module.exports = {
     target: 'node',
-    entry: './src/index.js',
+    entry: './src/app.js',
     output: {
         filename: 'bundle.cjs',
         path: path.resolve(__dirname, 'dist'),

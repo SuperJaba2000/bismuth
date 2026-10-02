@@ -38,6 +38,7 @@ export default class WelcomeTab extends UITab {
     }
 
     init(styles) {
+        super.init();
         this.generateLogo();
 
         this.addChild('logo-box', blessed.box({
